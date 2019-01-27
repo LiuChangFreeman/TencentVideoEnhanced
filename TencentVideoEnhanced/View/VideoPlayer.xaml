@@ -1,0 +1,31 @@
+﻿<Page
+    x:Class="TencentVideoEnhanced.View.VideoPlayer"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:TencentVideoEnhanced.View"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
+    NavigationCacheMode="Required"
+    >
+
+    <Grid>
+        <WebView 
+                x:Name="MainWebView" 
+                NavigationCompleted="NavigationCompleted" 
+                DOMContentLoaded="DOMContentLoaded" 
+                ContainsFullScreenElementChanged="ContainsFullScreenElementChanged"
+                NewWindowRequested="NewWindowRequested"
+                SizeChanged="SizeChanged"
+                x:FieldModifier="public"
+            
+        />
+        <Grid x:Name="Blur" Background="#FF1765A8">
+        </Grid>
+        <ProgressRing
+            x:Name="Loading"  Width="80" Height="80"
+        >
+        </ProgressRing>
+    </Grid>
+</Page>

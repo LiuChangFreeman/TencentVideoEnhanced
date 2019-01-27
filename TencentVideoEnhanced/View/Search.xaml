@@ -1,0 +1,26 @@
+﻿<Page
+    x:Class="TencentVideoEnhanced.View.Search"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:TencentVideoEnhanced.View"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
+    NavigationCacheMode="Required"
+    >
+    <Grid>
+        <WebView x:Name="SearchWebView" 
+                NewWindowRequested="NewWindowRequested" 
+                NavigationCompleted="NavigationCompleted" 
+                DOMContentLoaded="DOMContentLoaded"             
+        >
+        </WebView>
+        <Grid x:Name="Blur">
+        </Grid>
+        <ProgressRing
+            x:Name="Loading"  Width="80" Height="80"
+        >
+        </ProgressRing>
+    </Grid>
+</Page>
