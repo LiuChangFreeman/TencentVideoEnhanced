@@ -7,23 +7,24 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:data="using:TencentVideoEnhanced.Model"
     mc:Ignorable="d"
-    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" Loaded="Page_Loaded">
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" Loaded="Page_Loaded"  NavigationCacheMode="Disabled"
+    >
     <Page.Resources>
         <data:RulesDataEmptyConverter x:Key="RulesDataEmptyConverter"/>
         
         <DataTemplate x:Key="SettingsTemplate" x:DataType="data:Rules">
-            <Pivot FontSize="24">
-                <PivotItem Header="辅助功能">
+            <Pivot FontSize="40">
+                <PivotItem Header="常规设置">
                     <ScrollViewer VerticalScrollBarVisibility="Hidden">
                         <ScrollViewer.Content>
                             <StackPanel ScrollViewer.VerticalScrollBarVisibility="Hidden">
-                                <TextBlock Visibility="{x:Bind rules.eval.DOMContentLoaded,Converter={StaticResource RulesDataEmptyConverter}}" Margin="30,10,10,10" FontSize="36" Text="元素解析时" FontWeight="Bold">
+                                <Button x:Name="ResetSettings" Margin="30,10,10,10" Content="重置设置" Click="ResetSettings_Click"></Button>
+                                <TextBlock Visibility="{x:Bind rules.function.click,Converter={StaticResource RulesDataEmptyConverter}}" Margin="30,10,10,10" FontSize="36" Text="应用设置" FontWeight="Bold">
                                 </TextBlock>
                                 <ListView 
                                     SelectionMode="None" 
                                     IsItemClickEnabled="False"
-                                    ItemsSource="{x:Bind rules.eval.DOMContentLoaded,Mode=TwoWay}"
-                                    Visibility="{x:Bind rules.eval.DOMContentLoaded,Converter={StaticResource RulesDataEmptyConverter}}"
+                                    ItemsSource="{x:Bind settings,Mode=TwoWay}"
                                     ScrollViewer.VerticalScrollBarVisibility="Hidden" 
                                 >
                                     <ListView.ItemTemplate>
@@ -31,6 +32,7 @@
                                             <ToggleSwitch 
                                                 Header="{x:Bind description}"
                                                 IsOn="{x:Bind status,Mode=TwoWay}"
+                                                IsEnabled="{x:Bind enable}"
                                                 OnContent="开启"
                                                 OffContent="关闭"
                                                 Toggled="ToggleSwitch_Toggled"
@@ -39,17 +41,13 @@
                                         </DataTemplate>
                                     </ListView.ItemTemplate>
                                 </ListView>
-                                <TextBlock
-                                    Margin="30,10,10,10" FontSize="36" Text="页面加载完毕时" FontWeight="Bold"
-                                    Visibility="{x:Bind rules.eval.NavigationCompleted,Converter={StaticResource RulesDataEmptyConverter}}"
-                                >
-                                   
+                                <TextBlock Visibility="{x:Bind rules.function.click,Converter={StaticResource RulesDataEmptyConverter}}" Margin="30,10,10,10" FontSize="36" Text="自动脚本" FontWeight="Bold">
                                 </TextBlock>
-                                <ListView  
+                                <ListView 
                                     SelectionMode="None" 
                                     IsItemClickEnabled="False"
-                                    ItemsSource="{x:Bind rules.eval.NavigationCompleted,Mode=TwoWay}"
-                                    Visibility="{x:Bind rules.eval.NavigationCompleted,Converter={StaticResource RulesDataEmptyConverter}}"
+                                    ItemsSource="{x:Bind rules.function.click,Mode=TwoWay}"
+                                    Visibility="{x:Bind rules.function.click,Converter={StaticResource RulesDataEmptyConverter}}"
                                     ScrollViewer.VerticalScrollBarVisibility="Hidden" 
                                 >
                                     <ListView.ItemTemplate>
@@ -57,6 +55,34 @@
                                             <ToggleSwitch 
                                                 Header="{x:Bind description}"
                                                 IsOn="{x:Bind status,Mode=TwoWay}"
+                                                IsEnabled="{x:Bind enable}"
+                                                OnContent="开启"
+                                                OffContent="关闭"
+                                                Toggled="ToggleSwitch_Toggled"
+                                            >
+                                            </ToggleSwitch>
+                                        </DataTemplate>
+                                    </ListView.ItemTemplate>
+                                </ListView>
+                                <!--<TextBlock
+                                    Margin="30,10,10,10" FontSize="36" Text="执行脚本" FontWeight="Bold"
+                                    Visibility="{x:Bind rules.function.eval,Converter={StaticResource RulesDataEmptyConverter}}"
+                                >
+                                   
+                                </TextBlock>-->
+                                <ListView  
+                                    SelectionMode="None" 
+                                    IsItemClickEnabled="False"
+                                    ItemsSource="{x:Bind rules.function.eval,Mode=TwoWay}"
+                                    Visibility="{x:Bind rules.function.eval,Converter={StaticResource RulesDataEmptyConverter}}"
+                                    ScrollViewer.VerticalScrollBarVisibility="Hidden" 
+                                >
+                                    <ListView.ItemTemplate>
+                                        <DataTemplate x:DataType="data:RulesData" >
+                                            <ToggleSwitch 
+                                                Header="{x:Bind description}"
+                                                IsOn="{x:Bind status,Mode=TwoWay}"
+                                                IsEnabled="{x:Bind enable}"
                                                 OnContent="开启"
                                                 OffContent="关闭"
                                                 Toggled="ToggleSwitch_Toggled"
@@ -69,12 +95,17 @@
                         </ScrollViewer.Content>
                     </ScrollViewer>
                 </PivotItem>
-                <PivotItem Header="视频页移除元素">
+                <PivotItem Header="播放页精简">
                     <ScrollViewer VerticalScrollBarVisibility="Hidden">
                         <ScrollViewer.Content>
                             <StackPanel ScrollViewer.VerticalScrollBarVisibility="Hidden">
                                 <TextBlock
-                                    Margin="30,10,10,10" FontSize="36" Text="元素解析时" FontWeight="Bold"
+                                    Margin="30,10,10,10" FontSize="30" Text="HTML解析成功时" FontWeight="Bold" FontFamily="DengXian"
+                                    Visibility="{x:Bind rules.remove.DOMContentLoaded,Converter={StaticResource RulesDataEmptyConverter}}"
+                                >
+                                </TextBlock>
+                                <TextBlock
+                                    Margin="30,0,0,10" FontSize="14" Text="获取页面成功时已经存在的元素，将在HTML解析完毕后删除"
                                     Visibility="{x:Bind rules.remove.DOMContentLoaded,Converter={StaticResource RulesDataEmptyConverter}}"
                                 >
                                 </TextBlock>
@@ -90,6 +121,7 @@
                                             <ToggleSwitch 
                                                 Header="{x:Bind description}"
                                                 IsOn="{x:Bind status,Mode=TwoWay}"
+                                                IsEnabled="{x:Bind enable}"
                                                 OnContent="开启"
                                                 OffContent="关闭"
                                                 Toggled="ToggleSwitch_Toggled"
@@ -99,7 +131,12 @@
                                     </ListView.ItemTemplate>
                                 </ListView>
                                 <TextBlock 
-                                    Margin="30,10,10,10" FontSize="36" Text="页面加载完毕时" FontWeight="Bold"
+                                    Margin="30,10,10,10" FontSize="30" Text="JS代码执行完毕时" FontWeight="Bold"
+                                    Visibility="{x:Bind rules.remove.NavigationCompleted,Converter={StaticResource RulesDataEmptyConverter}}"
+                                >
+                                </TextBlock>
+                                <TextBlock
+                                    Margin="30,0,0,10" FontSize="14" Text="JS动态载入的元素，将在网页准备就绪时删除"
                                     Visibility="{x:Bind rules.remove.NavigationCompleted,Converter={StaticResource RulesDataEmptyConverter}}"
                                 >
                                 </TextBlock>
@@ -115,6 +152,7 @@
                                             <ToggleSwitch 
                                                 Header="{x:Bind description}"
                                                 IsOn="{x:Bind status,Mode=TwoWay}"
+                                                IsEnabled="{x:Bind enable}"
                                                 OnContent="开启"
                                                 OffContent="关闭"
                                                 Toggled="ToggleSwitch_Toggled"
@@ -127,12 +165,17 @@
                         </ScrollViewer.Content>
                     </ScrollViewer>
                 </PivotItem>
-                <PivotItem Header="搜索页移除元素">
+                <PivotItem Header="搜索页精简">
                     <ScrollViewer VerticalScrollBarVisibility="Hidden">
                         <ScrollViewer.Content>
                             <StackPanel ScrollViewer.VerticalScrollBarVisibility="Hidden">
                                 <TextBlock
-                                    Margin="30,10,10,10" FontSize="36" Text="元素解析时" FontWeight="Bold"
+                                    Margin="30,10,10,10" FontSize="30" Text="HTML解析成功时" FontWeight="Bold" FontFamily="DengXian"
+                                    Visibility="{x:Bind rules.remove2.DOMContentLoaded,Converter={StaticResource RulesDataEmptyConverter}}"
+                                >
+                                </TextBlock>
+                                <TextBlock
+                                    Margin="30,0,0,10" FontSize="14" Text="获取页面成功时已经存在的元素，将在HTML解析完毕后删除"
                                     Visibility="{x:Bind rules.remove2.DOMContentLoaded,Converter={StaticResource RulesDataEmptyConverter}}"
                                 >
                                 </TextBlock>
@@ -148,6 +191,7 @@
                                             <ToggleSwitch 
                                                 Header="{x:Bind description}"
                                                 IsOn="{x:Bind status,Mode=TwoWay}"
+                                                IsEnabled="{x:Bind enable}"
                                                 OnContent="开启"
                                                 OffContent="关闭"
                                                 Toggled="ToggleSwitch_Toggled"
@@ -157,7 +201,12 @@
                                     </ListView.ItemTemplate>
                                 </ListView>
                                 <TextBlock 
-                                    Margin="30,10,10,10" FontSize="36" Text="页面加载完毕时" FontWeight="Bold"
+                                    Margin="30,10,10,10" FontSize="30" Text="JS代码执行完毕时" FontWeight="Bold"
+                                    Visibility="{x:Bind rules.remove2.NavigationCompleted,Converter={StaticResource RulesDataEmptyConverter}}"
+                                >
+                                </TextBlock>
+                                <TextBlock
+                                    Margin="30,0,0,10" FontSize="14" Text="JS动态载入的元素，将在网页准备就绪时删除"
                                     Visibility="{x:Bind rules.remove2.NavigationCompleted,Converter={StaticResource RulesDataEmptyConverter}}"
                                 >
                                 </TextBlock>
@@ -173,6 +222,7 @@
                                             <ToggleSwitch 
                                                 Header="{x:Bind description}"
                                                 IsOn="{x:Bind status,Mode=TwoWay}"
+                                                IsEnabled="{x:Bind enable}"
                                                 OnContent="开启"
                                                 OffContent="关闭"
                                                 Toggled="ToggleSwitch_Toggled"
@@ -189,15 +239,6 @@
         </DataTemplate>
     </Page.Resources>
     <Grid Background="White">
-        <!--<Grid.RowDefinitions>
-            <RowDefinition Height="60"></RowDefinition>
-            <RowDefinition Height="*"></RowDefinition>
-        </Grid.RowDefinitions>
-        <ToggleButton x:Name="Locked" 
-            Foreground="White" Width="120" Height="40" BorderThickness="0" Background="#FF1765A8" Content="解锁选项" IsChecked="False" 
-        >
-            
-        </ToggleButton>-->
         <ContentPresenter
             x:Name="SettingsPresenter"
             ContentTemplate="{StaticResource SettingsTemplate}"

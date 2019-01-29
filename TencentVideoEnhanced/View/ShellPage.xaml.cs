@@ -21,6 +21,7 @@ using TencentVideoEnhanced.Model;
 using TencentVideoEnhanced.View;
 using Microsoft.Toolkit.Uwp.Helpers;
 using Newtonsoft.Json;
+using Windows.ApplicationModel.Core;
 
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
@@ -47,12 +48,7 @@ namespace TencentVideoEnhanced.View
             ContentFrame.Navigate(typeof(Search));
         }
 
-        private void HambugerB_Tapped(object sender, TappedRoutedEventArgs e)
-        {
-            SplitView.IsPaneOpen = !SplitView.IsPaneOpen;
-        }
-
-        private void HambugerA_Tapped(object sender, TappedRoutedEventArgs e)
+        private void Hambuger_Tapped(object sender, TappedRoutedEventArgs e)
         {
             SplitView.IsPaneOpen = !SplitView.IsPaneOpen;
         }
@@ -62,13 +58,13 @@ namespace TencentVideoEnhanced.View
             ContentFrame.Navigate(typeof(Settings));
         }
 
-        //private void Home_Tapped(object sender, TappedRoutedEventArgs e)
-        //{
-        //    ContentFrame.Navigate(typeof(VideoPlayer), "https://v.qq.com/x/cover/nphyo88qm4m6i6s.html");
-        //}
-
         private void Video_Tapped(object sender, TappedRoutedEventArgs e)
         {
+            //从播放页回到设置页会栈溢出，原因不明。解决办法是进入视频页之前，先进入搜索页
+            if (ContentFrame.Content is Settings)
+            {
+                ContentFrame.Navigate(typeof(Search));
+            }
             Frame.Navigate(typeof(VideoPlayer), "resume from main page");
         }
 

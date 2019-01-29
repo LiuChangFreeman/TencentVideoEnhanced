@@ -11,28 +11,19 @@
     >
 
     <Grid  Background="#FF2E2E36">
-        <Button x:Name="HambugerA"  FontFamily="Segoe MDL2 Assets" Content="&#xE700;" VerticalAlignment="Top" Width="48" Height="48" Background="Transparent" Tapped="HambugerA_Tapped" HorizontalAlignment="Left" />
         <SplitView x:Name="SplitView" CompactPaneLength="48" OpenPaneLength="160" PaneBackground="Transparent" IsPaneOpen="False" DisplayMode="CompactOverlay" >
             <SplitView.Pane>
                 <Grid>
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="48"></RowDefinition>
+                        <RowDefinition Height="32"></RowDefinition>
                         <RowDefinition Height="48"></RowDefinition>
                         <RowDefinition Height="48"></RowDefinition>
                         <RowDefinition Height="48"></RowDefinition>
                         <RowDefinition Height="*"></RowDefinition>
                         <RowDefinition Height="48"></RowDefinition>
                     </Grid.RowDefinitions>
-                    <Button Foreground="White" x:Name="HambugerB" FontFamily="Segoe MDL2 Assets" Content="&#xE700;"  Width="48" Height="48" Background="Transparent"  Tapped="HambugerB_Tapped" />
-                    <!--<ListViewItem Grid.Row="1" x:Name="Home" Foreground="White" ToolTipService.ToolTip="主页" Tapped="Home_Tapped">
-                        <StackPanel Orientation="Horizontal" >
-                            <Grid  Height="44" Width="44" >
-                                <SymbolIcon Symbol="Home" Foreground="White" HorizontalAlignment="Left" />
-                            </Grid>
-                            <TextBlock FontFamily="DengXian" Text="主页"  VerticalAlignment="Center" Foreground="White"/>
-                        </StackPanel>
-                    </ListViewItem>-->
-                    <ListViewItem Grid.Row="1" x:Name="Search" Foreground="White" ToolTipService.ToolTip="搜索" Tapped="Search_Tapped" >
+                    <Button Grid.Row="1" Foreground="White" x:Name="Hambuger" FontFamily="Segoe MDL2 Assets" Content="&#xE700;"  Width="48" Height="48" Background="Transparent"  Tapped="Hambuger_Tapped" />
+                    <ListViewItem Grid.Row="2" x:Name="Search" Foreground="White" ToolTipService.ToolTip="搜索" Tapped="Search_Tapped" >
                         <StackPanel Orientation="Horizontal" >
                             <Grid  Height="44" Width="44" >
                                 <SymbolIcon Symbol="Find" Foreground="White" HorizontalAlignment="Left" />
@@ -40,7 +31,7 @@
                             <TextBlock Text="搜索"  VerticalAlignment="Center" Foreground="White"/>
                         </StackPanel>
                     </ListViewItem>
-                    <ListViewItem Grid.Row="2" x:Name="Video" Foreground="White" ToolTipService.ToolTip="播放器" Tapped="Video_Tapped" >
+                    <ListViewItem Grid.Row="3" x:Name="Video" Foreground="White" ToolTipService.ToolTip="播放器" Tapped="Video_Tapped" >
                         <StackPanel Orientation="Horizontal" >
                             <Grid  Height="44" Width="44" >
                                 <SymbolIcon Symbol="Video" Foreground="White" HorizontalAlignment="Left" />

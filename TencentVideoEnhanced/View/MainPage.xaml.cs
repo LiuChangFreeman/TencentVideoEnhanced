@@ -6,6 +6,10 @@ using TencentVideoEnhanced.View;
 using Microsoft.Toolkit.Uwp.Helpers;
 using Newtonsoft.Json;
 using Windows.UI.Core;
+using Windows.ApplicationModel.Core;
+using Windows.UI;
+using Windows.UI.ViewManagement;
+using Windows.UI.Xaml;
 
 // https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x804 上介绍了“空白页”项模板
 
@@ -16,23 +20,35 @@ namespace TencentVideoEnhanced
     /// </summary>
     public sealed partial class MainPage : Page
     {
+        private Rules Rules;
+
         public MainPage()
         {
             this.InitializeComponent();
             Init();
-            MainFrame.Navigate(typeof(ShellPage));
         }
 
         private async void Init()
         {
-            LocalObjectStorageHelper localObjectStorageHelper = new LocalObjectStorageHelper();
-            if (!localObjectStorageHelper.KeyExists("rules"))
+            LocalObjectStorageHelper LocalObjectStorageHelper = new LocalObjectStorageHelper();
+            if (!LocalObjectStorageHelper.KeyExists("rules"))
             {
                 StorageFile JsonRules = await StorageFile.GetFileFromApplicationUriAsync(new Uri("ms-appx:///Assets/rules.json"));
                 string StringRules = await FileIO.ReadTextAsync(JsonRules);
-                var rules = JsonConvert.DeserializeObject<Rules>(StringRules);
-                localObjectStorageHelper.Save("rules", rules);
+                Rules = JsonConvert.DeserializeObject<Rules>(StringRules);
+                LocalObjectStorageHelper.Save("rules", Rules);
             }
+            else
+            {
+                Rules = LocalObjectStorageHelper.Read("rules",Rules);
+            }
+            CoreApplication.GetCurrentView().TitleBar.ExtendViewIntoTitleBar = true;
+            var TitleBar = ApplicationView.GetForCurrentView().TitleBar;
+            TitleBar.BackgroundColor = Colors.Transparent;
+            TitleBar.ButtonBackgroundColor = Colors.Transparent;
+            TitleBar.ButtonInactiveForegroundColor = Colors.Transparent;
+            TitleBar.ButtonInactiveBackgroundColor = Colors.Transparent;
+            MainFrame.Navigate(typeof(ShellPage));
         }
     }
 }

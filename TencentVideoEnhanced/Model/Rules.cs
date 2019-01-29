@@ -22,15 +22,21 @@ namespace TencentVideoEnhanced.Model
             get { return _rules; }
             set { _rules = value; PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("rules")); }
         }
+        private List<RulesData> _settings;
+        public List<RulesData> settings
+        {
+            get { return _settings; }
+            set { _settings = value; PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("settings")); }
+        }
     }
     public class RulesContent : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
-        private RulesItem _eval;
-        public RulesItem eval
+        private RulesItem2 _function;
+        public RulesItem2 function
         {
-            get { return _eval; }
-            set { _eval = value; PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("eval")); }
+            get { return _function; }
+            set { _function = value; PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("function")); }
         }
         private RulesItem _remove;
         public RulesItem remove
@@ -61,6 +67,24 @@ namespace TencentVideoEnhanced.Model
             set { _NavigationCompleted = value; PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("NavigationCompleted")); }
         }
     }
+
+    public class RulesItem2 : INotifyPropertyChanged
+    {
+        public event PropertyChangedEventHandler PropertyChanged;
+        private List<RulesData> _eval;
+        public List<RulesData> eval
+        {
+            get { return _eval; }
+            set { _eval = value; PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("eval")); }
+        }
+        private List<RulesData> _click;
+        public List<RulesData> click
+        {
+            get { return _click; }
+            set { _click = value; PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("click")); }
+        }
+    }
+
     public class RulesData : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
@@ -81,6 +105,12 @@ namespace TencentVideoEnhanced.Model
         {
             get { return _status; }
             set { _status = value; PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("status")); }
+        }
+        private bool _enable;
+        public bool enable
+        {
+            get { return _enable; }
+            set { _enable = value; PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("enable")); }
         }
     }
 }

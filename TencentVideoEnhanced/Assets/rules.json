@@ -1,94 +1,177 @@
 ﻿{
-  "time":"1548477021",
+  "time": "1548477021",
   "rules": {
-    "eval": {
-      "DOMContentLoaded": [],
-      "NavigationCompleted": [
+    "function": {
+      "eval": [
+        {
+          "value": "var notvip=document.getElementsByClassName('icon_vip_grey');var elements=document.getElementsByClassName('txp_menuitem');elements[1].parentNode.removeChild(elements[1]);if(notvip.length>0){elements[1].parentNode.removeChild(elements[1])}",
+          "description": "移除不可用分辨率",
+          "status": true,
+          "enable": false
+        },
+        {
+          "value": "var elements=document.getElementsByClassName('txp_menuitem');elements[1].click();",
+          "description": "切换最高分辨率",
+          "status": true,
+          "enable": true
+        },
+        {
+          "value": "document.body.style.overflowX='hidden';",
+          "description": "移除水平滚动条",
+          "status": true,
+          "enable": true
+        },
+        {
+          "value": "document.body.style.overflowY='hidden';",
+          "description": "移除竖直滚动条",
+          "status": true,
+          "enable": true
+        }
+      ],
+      "click": [
         {
           "value": "txp_open",
           "description": "关闭弹幕",
-          "status": true
+          "status": true,
+          "enable": true
         },
         {
           "value": "txp_btn_fake",
-          "description": "网页全屏",
-          "status": false
-        },
-        {
-          "value": "txp_btn_fullscreen",
-          "description": "全屏播放",
-          "status": false
+          "description": "进入网页全屏",
+          "status": false,
+          "enable": true
         }
       ]
     },
     "remove": {
       "DOMContentLoaded": [
         {
-          "value": "site_head_simple",
-          "description": "顶部用户栏",
-          "status": true
+          "value": "player_headline",
+          "description": "顶部信息栏",
+          "status": false,
+          "enable": true
         },
         {
-          "value": "player_headline",
-          "description": "底部信息栏",
-          "status": false
+          "value": "txp_comment_hot",
+          "description": "热评按钮",
+          "status": true,
+          "enable": true
+        },
+        {
+          "value": "mod_intro",
+          "description": "视频简介",
+          "status": true,
+          "enable": true
         },
         {
           "value": "action_wrap",
-          "description": "底部播放次数",
-          "status": true
+          "description": "播放次数",
+          "status": true,
+          "enable": true
         },
         {
-          "value": "container_main",
-          "description": "底部大片区域",
-          "status": true
+          "value": "btn_collect",
+          "description": "收藏按钮",
+          "status": true,
+          "enable": true
         },
         {
           "value": "mod_title",
           "description": "相关视频标题栏",
-          "status": true
+          "status": true,
+          "enable": true
         },
         {
           "value": "mod_figure",
           "description": "相关视频",
-          "status": false
+          "status": false,
+          "enable": true
+        },
+        {
+          "value": "container_main",
+          "description": "底部大片区域",
+          "status": true,
+          "enable": true
         },
         {
           "value": "site_footer",
           "description": "页脚",
-          "status": true
+          "status": true,
+          "enable": true
         }
       ],
       "NavigationCompleted": [
         {
+          "value": "txp_barrage_form",
+          "description": "弹幕发送栏",
+          "status": false,
+          "enable": true
+        },
+        {
+          "value": "site_head_simple",
+          "description": "顶部用户栏",
+          "status": true,
+          "enable": true
+        },
+        {
           "value": "site_head_drawer",
           "description": "顶部追剧",
-          "status": true
+          "status": true,
+          "enable": true
         },
         {
           "value": "mod_scene_change",
           "description": "VIP宣传栏1",
-          "status": true
+          "status": true,
+          "enable": false
         },
         {
           "value": "mod_side_vip",
           "description": "VIP宣传栏2",
-          "status": true
+          "status": true,
+          "enable": false
+        },
+        {
+          "value": "txp_ad_skip_text",
+          "description": "VIP可关闭广告",
+          "status": true,
+          "enable": true
+        },
+        {
+          "value": "txp_btn_close",
+          "description": "关闭广告按钮",
+          "status": true,
+          "enable": true
+        },
+        {
+          "value": "txp_top_btns",
+          "description": "悬浮按钮",
+          "status": true,
+          "enable": true
+        },
+        {
+          "value": "quick_vip_meta",
+          "description": "开通VIP",
+          "status": true,
+          "enable": false
         },
         {
           "value": "x_fixed_tool",
           "description": "辅助工具栏",
-          "status": true
+          "status": true,
+          "enable": true
         },
         {
           "value": "mod_row_box",
           "description": "评论区",
-          "status": true
+          "status": true,
+          "enable": true
         },
         {
           "value": "mod_ad",
           "description": "广告位",
-          "status": true
+          "status": true,
+          "enable": true
         }
       ]
     },
@@ -97,66 +180,92 @@
         {
           "value": "navigation_simple",
           "description": "顶部导航栏",
-          "status": true
+          "status": true,
+          "enable": true
         },
         {
           "value": "mod_quick",
           "description": "顶部用户栏",
-          "status": true
+          "status": true,
+          "enable": true
         },
         {
           "value": "mod_box_apps",
           "description": "相关游戏",
-          "status": true
+          "status": true,
+          "enable": true
         },
         {
           "value": "mod_box_people",
           "description": "相关明星",
-          "status": true
+          "status": true,
+          "enable": true
         },
         {
           "value": "mod_box_vplus",
           "description": "相关用户",
-          "status": true
+          "status": true,
+          "enable": true
         },
         {
           "value": "mod_box_recommend",
           "description": "相关推荐",
-          "status": true
+          "status": true,
+          "enable": true
         },
         {
           "value": "mod_box_hotlist",
           "description": "热搜榜单",
-          "status": true
+          "status": true,
+          "enable": true
         },
         {
           "value": "result_relative",
           "description": "相关搜索",
-          "status": true
+          "status": true,
+          "enable": true
         },
         {
           "value": "site_footer",
           "description": "页脚",
-          "status": true
+          "status": true,
+          "enable": true
         }
       ],
       "NavigationCompleted": [
         {
           "value": "head_line",
           "description": "顶部一条线",
-          "status": true
+          "status": true,
+          "enable": true
         },
         {
           "value": "x_fixed_tool",
           "description": "辅助工具栏",
-          "status": true
+          "status": true,
+          "enable": true
         },
         {
           "value": "mod_ad_search",
           "description": "广告位",
-          "status": true
+          "status": true,
+          "enable": true
+        },
+        {
+          "value": "quick_vip_meta",
+          "description": "开通VIP",
+          "status": true,
+          "enable": false
         }
       ]
     }
-  }
+  },
+  "settings": [
+    {
+      "value": "hidde_title",
+      "description": "隐藏标题栏",
+      "status": true,
+      "enable": false
+    }
+  ]
 }
