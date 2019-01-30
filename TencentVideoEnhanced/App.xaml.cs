@@ -5,9 +5,11 @@ using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
+using Windows.ApplicationModel.Core;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
 using Windows.UI.Core;
+using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -15,6 +17,12 @@ using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
+using Windows.UI;
+using Microsoft.Toolkit.Uwp.Helpers;
+using Newtonsoft.Json;
+using Windows.Storage;
+using TencentVideoEnhanced.Model;
+using Windows.UI.Popups;
 
 namespace TencentVideoEnhanced
 {
@@ -31,6 +39,36 @@ namespace TencentVideoEnhanced
         {
             this.InitializeComponent();
             this.Suspending += OnSuspending;
+            this.UnhandledException += OnUnhandledException;
+            InitRules();
+        }
+
+        public static Rules Rules;
+
+        private async void InitRules()
+        {
+
+            LocalObjectStorageHelper LocalObjectStorageHelper = new LocalObjectStorageHelper();
+            if (!await LocalObjectStorageHelper.FileExistsAsync("rules"))
+            {
+                StorageFile JsonRules = await StorageFile.GetFileFromApplicationUriAsync(new Uri("ms-appx:///Data/rules.json"));
+                string StringRules = await FileIO.ReadTextAsync(JsonRules);
+                Rules = JsonConvert.DeserializeObject<Rules>(StringRules);
+                await LocalObjectStorageHelper.SaveFileAsync("rules", Rules);
+            }
+            else
+            {
+                Rules = await LocalObjectStorageHelper.ReadFileAsync<Rules>("rules");
+            }
+            if (!LocalObjectStorageHelper.KeyExists("settings"))
+            {
+                LocalObjectStorageHelper.Save("settings", Rules.GetSettings());
+            }
+            else
+            {
+                var settings = LocalObjectStorageHelper.Read<Dictionary<string, bool>>("settings");
+                Rules.SetSettings(settings);
+            }
         }
 
         /// <summary>
@@ -72,6 +110,9 @@ namespace TencentVideoEnhanced
                 // 确保当前窗口处于活动状态
                 Window.Current.Activate();
             }
+
+            RegisterExceptionHandlingSynchronizationContext();
+
         }
 
         /// <summary>
@@ -96,6 +137,28 @@ namespace TencentVideoEnhanced
             var deferral = e.SuspendingOperation.GetDeferral();
             //TODO: 保存应用程序状态并停止任何后台活动
             deferral.Complete();
+        }
+
+        private async void OnUnhandledException(object sender, Windows.UI.Xaml.UnhandledExceptionEventArgs e)
+        {
+            e.Handled = true;
+            await new MessageDialog("程序异常:\r\n" + e.Exception.Message, ":(").ShowAsync();
+        }
+
+        private void RegisterExceptionHandlingSynchronizationContext()
+        {
+            ExceptionHandlingSynchronizationContext.Register().UnhandledException += SynchronizationContext_UnhandledException;
+        }
+
+        private async void SynchronizationContext_UnhandledException(object sender, Model.UnhandledExceptionEventArgs e)
+        {
+            e.Handled = true;
+            await new MessageDialog("程序异常:\r\n" + GetExceptionDetailMessage(e.Exception), ":(").ShowAsync();
+        }
+
+        private string GetExceptionDetailMessage(Exception ex)
+        {
+            return $"{ex.Message}\r\n{ex.StackTrace}\r\n";
         }
     }
 }

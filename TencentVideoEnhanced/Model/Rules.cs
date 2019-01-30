@@ -4,90 +4,140 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Collections.ObjectModel;
+using System.IO;
+using System.Runtime.Serialization;
 
 namespace TencentVideoEnhanced.Model
 {
     public class Rules : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
+
         private string _time;
         public string time
         {
             get { return _time; }
             set { _time = value; PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("time")); }
         }
+
         private RulesContent _rules;
         public RulesContent rules
         {
             get { return _rules; }
             set { _rules = value; PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("rules")); }
         }
-        private List<RulesData> _settings;
-        public List<RulesData> settings
+
+        private ObservableCollection<RulesItem> _app;
+        public ObservableCollection<RulesItem> app
         {
-            get { return _settings; }
-            set { _settings = value; PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("settings")); }
+            get { return _app; }
+            set { _app = value; PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("app")); }
         }
+
+        public Dictionary<string, bool> GetSettings()
+        {
+            Dictionary<string, bool> result= new Dictionary<string, bool>();
+            foreach (var item in app)
+            {
+                result[item.id] = item.status;
+            }
+            foreach (var item in rules.eval)
+            {
+                result[item.id] = item.status;
+            }
+            foreach (var item in rules.compact.video)
+            {
+                result[item.id] = item.status;
+            }
+            foreach (var item in rules.compact.search)
+            {
+                result[item.id] = item.status;
+            }
+            foreach (var item in rules.compact.history)
+            {
+                result[item.id] = item.status;
+            }
+            return result;
+        }
+
+        public void SetSettings(Dictionary<string, bool> data)
+        {
+            foreach (var item in app)
+            {
+                item.status= data[item.id];
+            }
+            foreach (var item in rules.eval)
+            {
+                item.status = data[item.id];
+            }
+            foreach (var item in rules.compact.video)
+            {
+                item.status = data[item.id];
+            }
+            foreach (var item in rules.compact.search)
+            {
+                item.status = data[item.id];
+            }
+            foreach (var item in rules.compact.history)
+            {
+                item.status = data[item.id];
+            }
+        }
+
     }
     public class RulesContent : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
-        private RulesItem2 _function;
-        public RulesItem2 function
-        {
-            get { return _function; }
-            set { _function = value; PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("function")); }
-        }
-        private RulesItem _remove;
-        public RulesItem remove
-        {
-            get { return _remove; }
-            set { _remove = value; PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("remove")); }
-        }
-        private RulesItem _remove2;
-        public RulesItem remove2
-        {
-            get { return _remove2; }
-            set { _remove2 = value; PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("remove2")); }
-        }
-    }
-    public class RulesItem : INotifyPropertyChanged
-    {
-        public event PropertyChangedEventHandler PropertyChanged;
-        private List<RulesData> _DOMContentLoaded;
-        public List<RulesData> DOMContentLoaded
-        {
-            get { return _DOMContentLoaded; }
-            set { _DOMContentLoaded = value; PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("DOMContentLoaded")); }
-        }
-        private List<RulesData> _NavigationCompleted;
-        public List<RulesData> NavigationCompleted
-        {
-            get { return _NavigationCompleted; }
-            set { _NavigationCompleted = value; PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("NavigationCompleted")); }
-        }
-    }
-
-    public class RulesItem2 : INotifyPropertyChanged
-    {
-        public event PropertyChangedEventHandler PropertyChanged;
-        private List<RulesData> _eval;
-        public List<RulesData> eval
+        private ObservableCollection<RulesItem> _eval;
+        public ObservableCollection<RulesItem> eval
         {
             get { return _eval; }
             set { _eval = value; PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("eval")); }
         }
-        private List<RulesData> _click;
-        public List<RulesData> click
+        private Compact _compact;
+        public Compact compact
         {
-            get { return _click; }
-            set { _click = value; PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("click")); }
+            get { return _compact; }
+            set { _compact = value; PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("compact")); }
         }
     }
-
-    public class RulesData : INotifyPropertyChanged
+    public class Compact : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
+
+        private ObservableCollection<RulesItem> _video;
+        public ObservableCollection<RulesItem> video
+        {
+            get { return _video; }
+            set { _video = value; PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("video")); }
+        }
+
+        private ObservableCollection<RulesItem> _search;
+        public ObservableCollection<RulesItem> search
+        {
+            get { return _search; }
+            set { _search = value; PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("search")); }
+        }
+
+        private ObservableCollection<RulesItem> _history;
+        public ObservableCollection<RulesItem> history
+        {
+            get { return _history; }
+            set { _history = value; PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("history")); }
+        }
+        
+    }
+
+    public class RulesItem : INotifyPropertyChanged
+    {
+        public event PropertyChangedEventHandler PropertyChanged;
+        private string _id;
+        public string id
+        {
+            get { return _id; }
+            set { _id = value; PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("id")); }
+        }
         private string _value;
         public string value
         {

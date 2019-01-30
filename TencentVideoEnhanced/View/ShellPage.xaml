@@ -19,6 +19,7 @@
                         <RowDefinition Height="48"></RowDefinition>
                         <RowDefinition Height="48"></RowDefinition>
                         <RowDefinition Height="48"></RowDefinition>
+                        <RowDefinition Height="48"></RowDefinition>
                         <RowDefinition Height="*"></RowDefinition>
                         <RowDefinition Height="48"></RowDefinition>
                     </Grid.RowDefinitions>
@@ -39,7 +40,15 @@
                             <TextBlock Text="播放器"  VerticalAlignment="Center" Foreground="White"/>
                         </StackPanel>
                     </ListViewItem>
-                    <ListViewItem Grid.Row="5" x:Name="Settings" Foreground="White" ToolTipService.ToolTip="设置中心" Tapped="Settings_Tapped" >
+                    <ListViewItem Grid.Row="4" x:Name="History" Foreground="White" ToolTipService.ToolTip="浏览历史" Tapped="History_Tapped" >
+                        <StackPanel Orientation="Horizontal" >
+                            <Grid  Height="44" Width="44" >
+                                <SymbolIcon Symbol="Clock" Foreground="White" HorizontalAlignment="Left" />
+                            </Grid>
+                            <TextBlock Text="浏览历史"  VerticalAlignment="Center" Foreground="White"/>
+                        </StackPanel>
+                    </ListViewItem>
+                    <ListViewItem Grid.Row="6" x:Name="Settings" Foreground="White" ToolTipService.ToolTip="设置中心" Tapped="Settings_Tapped" >
                         <StackPanel Orientation="Horizontal" >
                             <Grid  Height="44" Width="44" >
                                 <SymbolIcon Symbol="Setting" Foreground="White" HorizontalAlignment="Left" />

@@ -30,9 +30,8 @@ namespace TencentVideoEnhanced.View
     /// </summary>
     public sealed partial class Settings : Page
     {
-        private Rules rules;
         private LocalObjectStorageHelper LocalObjectStorageHelper = new LocalObjectStorageHelper();
-        private bool loaded = false;
+        private bool PageLoaded = false;
 
         public Settings()
         {
@@ -42,23 +41,31 @@ namespace TencentVideoEnhanced.View
 
         private void Init()
         {
-            rules = LocalObjectStorageHelper.Read<Rules>("rules");           
-            SettingsPresenter.Content = rules;
-        }
-
-        private async void ToggleSwitch_Toggled(object sender, RoutedEventArgs e)
-        {
-            if (!loaded)
-            {
-                return;
-            }
-            await Task.Delay(1);
-            LocalObjectStorageHelper.Save("rules",rules);
+            Loading.IsActive = true;
+            SettingsPresenter.Content = App.Rules;
+            Loading.IsActive = false;
         }
 
         private void Page_Loaded(object sender, RoutedEventArgs e)
         {
-            loaded = true;
+            PageLoaded = true;
+        }
+
+        private async void ToggleSwitch_Toggled(object sender, RoutedEventArgs e)
+        {
+            //开关在初始化的时候会自动触发，原因不明
+            if (!PageLoaded)
+            {
+                return;
+            }
+            //等待数据绑定同步
+            await Task.Delay(1);
+            LocalObjectStorageHelper.Save("settings", App.Rules.GetSettings());
+        }
+
+        private void ToggleButton_Click(object sender, RoutedEventArgs e)
+        {
+            LocalObjectStorageHelper.Save("settings", App.Rules.GetSettings());
         }
 
         private async void ResetSettings_Click(object sender, RoutedEventArgs e)
@@ -69,10 +76,11 @@ namespace TencentVideoEnhanced.View
             var result = await md.ShowAsync();
             if (result.Id as string == "重置")
             {
-                StorageFile JsonRules = await StorageFile.GetFileFromApplicationUriAsync(new Uri("ms-appx:///Assets/rules.json"));
+                StorageFile JsonRules = await StorageFile.GetFileFromApplicationUriAsync(new Uri("ms-appx:///Data/rules.json"));
                 string StringRules = await FileIO.ReadTextAsync(JsonRules);
-                rules = JsonConvert.DeserializeObject<Rules>(StringRules);
-                LocalObjectStorageHelper.Save("rules", rules);
+                App.Rules = JsonConvert.DeserializeObject<Rules>(StringRules);
+                await LocalObjectStorageHelper.SaveFileAsync("rules", App.Rules);
+                LocalObjectStorageHelper.Save("settings", App.Rules.GetSettings());
             }
             md = new MessageDialog("是否重启应用？", "重启应用后设置才能生效");
             md.Commands.Add(new UICommand("确定", cmd => { }, "重启"));

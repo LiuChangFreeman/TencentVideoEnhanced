@@ -41,5 +41,11 @@
                 Foreground="White" Margin="0,31,92,0" Width="46"
                 ToolTipService.ToolTip="刷新"
             />
+        <Button x:Name="Go" Content="&#xE8B2;" 
+                FontFamily="Segoe MDL2 Assets" Background="Transparent" HorizontalAlignment="Right"   
+                VerticalAlignment="Top" Height="31"
+                Foreground="White" Margin="0,31,46,0" Width="46"
+                ToolTipService.ToolTip="立刻进入" Click="Go_Click"
+            />
     </Grid>
 </Page>

@@ -10,6 +10,7 @@ using Windows.ApplicationModel.Core;
 using Windows.UI;
 using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
+using System.Collections.Generic;
 
 // https://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x804 上介绍了“空白页”项模板
 
@@ -28,20 +29,8 @@ namespace TencentVideoEnhanced
             Init();
         }
 
-        private async void Init()
+        private void Init()
         {
-            LocalObjectStorageHelper LocalObjectStorageHelper = new LocalObjectStorageHelper();
-            if (!LocalObjectStorageHelper.KeyExists("rules"))
-            {
-                StorageFile JsonRules = await StorageFile.GetFileFromApplicationUriAsync(new Uri("ms-appx:///Assets/rules.json"));
-                string StringRules = await FileIO.ReadTextAsync(JsonRules);
-                Rules = JsonConvert.DeserializeObject<Rules>(StringRules);
-                LocalObjectStorageHelper.Save("rules", Rules);
-            }
-            else
-            {
-                Rules = LocalObjectStorageHelper.Read("rules",Rules);
-            }
             CoreApplication.GetCurrentView().TitleBar.ExtendViewIntoTitleBar = true;
             var TitleBar = ApplicationView.GetForCurrentView().TitleBar;
             TitleBar.BackgroundColor = Colors.Transparent;

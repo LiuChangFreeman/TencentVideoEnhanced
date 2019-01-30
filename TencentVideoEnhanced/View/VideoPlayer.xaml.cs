@@ -33,9 +33,7 @@ namespace TencentVideoEnhanced.View
     public sealed partial class VideoPlayer : Page
     {
         private Uri UriSearch = new Uri("https://v.qq.com/x/search");
-        private Rules Rules;
         private bool InitSuccess = false;
-        private LocalObjectStorageHelper LocalObjectStorageHelper = new LocalObjectStorageHelper();
         private string CurrentUrl = "";
         private string DefaultVideoUrl = "https://v.qq.com/x/cover/ocjepullqnzm7d9/x00262vbmzt.html";
         //默认视频为《创造101》
@@ -43,7 +41,6 @@ namespace TencentVideoEnhanced.View
         public VideoPlayer()
         {
             this.InitializeComponent();
-            Rules = LocalObjectStorageHelper.Read<Rules>("rules");
             if (ApiInformation.IsApiContractPresent("Windows.Foundation.UniversalApiContract", 5))
             {
                 Blur.Background = new AcrylicBrush
@@ -53,10 +50,16 @@ namespace TencentVideoEnhanced.View
                     TintOpacity = 0.5
                 };
             }
+            Init();
+        }
+
+        private void Init()
+        {
             SystemNavigationManager SystemNavigationManager = SystemNavigationManager.GetForCurrentView();
             SystemNavigationManager.BackRequested += BackRequested;
             SystemNavigationManager.AppViewBackButtonVisibility = AppViewBackButtonVisibility.Visible;
         }
+
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             string Url= e.Parameter as string;
@@ -102,7 +105,7 @@ namespace TencentVideoEnhanced.View
             template = TransferTemplate(template);
             var script = string.Format(template, "container_inner");
             await MainWebView.InvokeScriptAsync("eval", new string[] { script });
-            template = "var elements = document.getElementsByClassName('{{0}}');if (elements.length > 0){elements[0].style.height=\"100%\";}";
+            template = "var elements = document.getElementsByClassName('{{0}}');if (elements.length > 0){elements[0].style.height='100%';}";
             template = TransferTemplate(template);
             script = string.Format(template, "mod_player");
             await MainWebView.InvokeScriptAsync("eval", new string[] { script });
@@ -111,7 +114,7 @@ namespace TencentVideoEnhanced.View
             script = string.Format(template, "mod_player_section");
             await MainWebView.InvokeScriptAsync("eval", new string[] { script });
             var height = MainWebView.ActualHeight;
-            template = "var elements = document.getElementsByClassName('{{0}}');if (elements.length > 0){elements[0].style.height=\"{{1}}px\";}";
+            template = "var elements = document.getElementsByClassName('{{0}}');if (elements.length > 0){elements[0].style.height='{{1}}px';}";
             template = TransferTemplate(template);
             script = string.Format(template, "mod_player_section", height);
             await MainWebView.InvokeScriptAsync("eval", new string[] { script });
@@ -129,45 +132,24 @@ namespace TencentVideoEnhanced.View
 
         private void DOMContentLoaded(WebView sender, WebViewDOMContentLoadedEventArgs args)
         {
-            foreach (RulesData item in Rules.rules.remove.DOMContentLoaded)
-            {
-                if (item.status)
-                {
-                    RemoveElementsByClassName(item.value);
-                }
-            }
-            foreach (RulesData item in Rules.rules.function.click)
-            {
-                if (item.status)
-                {
-                    ClickElementByClassName(item.value);
-                }
-            }
             AdaptWebViewWithWindow();
             Information.Text = "正在加载内容......";
         }
 
         private async void NavigationCompleted(WebView sender, WebViewNavigationCompletedEventArgs args)
         {
-            foreach (RulesData item in Rules.rules.function.eval)
+            foreach (RulesItem item in App.Rules.rules.eval)
             {
                 if (item.status)
                 {
                     EvalScripts(item.value);
                 }
             }
-            foreach (RulesData item in Rules.rules.remove.NavigationCompleted)
+            foreach (RulesItem item in App.Rules.rules.compact.video)
             {
                 if (item.status)
                 {
                     RemoveElementsByClassName(item.value);
-                }
-            }
-            foreach (RulesData item in Rules.rules.function.click)
-            {
-                if (item.status)
-                {
-                    ClickElementByClassName(item.value);
                 }
             }
             await Task.Delay(1000);
@@ -184,15 +166,7 @@ namespace TencentVideoEnhanced.View
 
         private void RemoveElementsByClassName(string ClassName)
         {
-            string template = "while(true){var element = document.getElementsByClassName('{{0}}');if(element.length>0){element[0].parentNode.removeChild(element[0]);}else{break;} }";
-            template = TransferTemplate(template);
-            string script = string.Format(template, ClassName);
-            EvalScripts(script);
-        }
-
-        private void ClickElementByClassName(string ClassName)
-        {
-            string template = "var elements = document.getElementsByClassName('{{0}}');if (elements.length > 0){elements[0].click();}";
+            string template = "while(true){var elements = document.getElementsByClassName('{{0}}');if(elements.length>0){for(var i=0;i<elements.length;i++){elements[i].parentNode.removeChild(elements[i]);} }else{break;} }";
             template = TransferTemplate(template);
             string script = string.Format(template, ClassName);
             EvalScripts(script);
@@ -244,6 +218,13 @@ namespace TencentVideoEnhanced.View
         }
 
         private new void Loaded(object sender, RoutedEventArgs e)
+        {
+            Loading.IsActive = false;
+            Blur.Visibility = Visibility.Collapsed;
+            Information.Visibility = Visibility.Collapsed;
+        }
+
+        private void Go_Click(object sender, RoutedEventArgs e)
         {
             Loading.IsActive = false;
             Blur.Visibility = Visibility.Collapsed;

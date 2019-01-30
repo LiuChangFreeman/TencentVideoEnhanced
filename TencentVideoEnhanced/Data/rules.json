@@ -1,0 +1,426 @@
+﻿{
+  "time": "1548477021",
+  "rules": {
+    "eval": [
+      {
+        "id":"A001",
+        "value": "var notvip=document.getElementsByClassName('icon_vip_grey').length>0;var content=document.getElementsByClassName('txp_popup_content');if(content.length>0){var children=content[0].childNodes;for(var i=0;i<children.length;i++){var child=children[i];var temp=$(child).attr('data-definition');if(temp=='pcclient'||(temp=='fhd'&&notvip)){content[0].removeChild(child);}}}",
+        "description": "移除不可用分辨率",
+        "status": true,
+        "enable": false
+      },
+      {
+        "id": "A002",
+        "value": "var notvip=document.getElementsByClassName('icon_vip_grey').length>0;var content=document.getElementsByClassName('txp_popup_content');if(content.length>0){var children=content[0].childNodes;for(var i=0;i<children.length;i++){var child=children[i];var temp=$(child).attr('data-definition');if(temp=='fhd'&&!notvip||(temp=='shd'&&notvip)){child.click();break;}}}",
+        "description": "切换最高分辨率",
+        "status": true,
+        "enable": true
+      },
+      {
+        "id": "A003",
+        "value": "var elements=document.getElementsByClassName('txp_open');if(elements.length>0){elements[0].click();}",
+        "description": "关闭弹幕",
+        "status": true,
+        "enable": true
+      },
+      {
+        "id": "A004",
+        "value": "var elements=document.getElementsByClassName('txp_btn_fake');if(elements.length>0){elements[0].click();}",
+        "description": "进入网页全屏",
+        "status": false,
+        "enable": true
+      },
+      {
+        "id": "A005",
+        "value": "document.body.style.overflowX='hidden';",
+        "description": "移除水平滚动条",
+        "status": true,
+        "enable": true
+      },
+      {
+        "id": "A006",
+        "value": "document.body.style.overflowY='hidden';",
+        "description": "移除竖直滚动条",
+        "status": false,
+        "enable": true
+      }
+    ],
+    "compact": {
+      "video": [
+        {
+          "id": "B001",
+          "value": "player_headline",
+          "description": "顶部信息栏",
+          "status": false,
+          "enable": true
+        },
+        {
+          "id": "B002",
+          "value": "txp_comment_hot",
+          "description": "热评按钮",
+          "status": true,
+          "enable": true
+        },
+        {
+          "id": "B003",
+          "value": "mod_intro",
+          "description": "视频简介",
+          "status": true,
+          "enable": true
+        },
+        {
+          "id": "B004",
+          "value": "action_wrap",
+          "description": "播放次数",
+          "status": true,
+          "enable": true
+        },
+        {
+          "id": "B005",
+          "value": "btn_collect",
+          "description": "收藏按钮",
+          "status": true,
+          "enable": true
+        },
+        {
+          "id": "B006",
+          "value": "mod_title",
+          "description": "相关视频标题栏",
+          "status": true,
+          "enable": true
+        },
+        {
+          "id": "B007",
+          "value": "mod_figure",
+          "description": "相关视频",
+          "status": false,
+          "enable": true
+        },
+        {
+          "id": "B008",
+          "value": "container_main",
+          "description": "底部大片区域",
+          "status": true,
+          "enable": true
+        },
+        {
+          "id": "B009",
+          "value": "site_footer",
+          "description": "页脚",
+          "status": true,
+          "enable": true
+        },
+
+
+        {
+          "id": "B010",
+          "value": "txp_barrage_form",
+          "description": "弹幕发送栏",
+          "status": false,
+          "enable": true
+        },
+        {
+          "id": "B011",
+          "value": "site_head_simple",
+          "description": "顶部用户栏",
+          "status": true,
+          "enable": true
+        },
+        {
+          "id": "B012",
+          "value": "site_head_drawer",
+          "description": "顶部追剧",
+          "status": true,
+          "enable": true
+        },
+        {
+          "id": "B013",
+          "value": "mod_scene_change",
+          "description": "VIP宣传栏1",
+          "status": true,
+          "enable": false
+        },
+        {
+          "id": "B014",
+          "value": "mod_side_vip",
+          "description": "VIP宣传栏2",
+          "status": true,
+          "enable": false
+        },
+        {
+          "id": "B015",
+          "value": "txp_ad_skip_text",
+          "description": "VIP可关闭广告",
+          "status": true,
+          "enable": true
+        },
+        {
+          "id": "B016",
+          "value": "txp_btn_close",
+          "description": "关闭广告按钮",
+          "status": true,
+          "enable": true
+        },
+        {
+          "id": "B017",
+          "value": "txp_top_btns",
+          "description": "悬浮按钮",
+          "status": true,
+          "enable": true
+        },
+        {
+          "id": "B018",
+          "value": "quick_vip_meta",
+          "description": "开通VIP",
+          "status": true,
+          "enable": false
+        },
+        {
+          "id": "B019",
+          "value": "x_fixed_tool",
+          "description": "辅助工具栏",
+          "status": true,
+          "enable": true
+        },
+        {
+          "id": "B020",
+          "value": "mod_row_box",
+          "description": "评论区",
+          "status": true,
+          "enable": true
+        },
+        {
+          "id": "B021",
+          "value": "mod_ad",
+          "description": "广告位",
+          "status": true,
+          "enable": true
+        },
+        {
+          "id": "B022",
+          "value": "player_container_wide_switch",
+          "description": "隐藏侧边栏按钮(已失效)",
+          "status": true,
+          "enable": true
+        }
+      ],
+      "search": [
+        {
+          "id": "C001",
+          "value": "navigation_simple",
+          "description": "顶部导航栏",
+          "status": true,
+          "enable": true
+        },
+        {
+          "id": "C002",
+          "value": "mod_quick",
+          "description": "顶部用户栏",
+          "status": true,
+          "enable": true
+        },
+        {
+          "id": "C003",
+          "value": "mod_box_apps",
+          "description": "相关游戏",
+          "status": true,
+          "enable": true
+        },
+        {
+          "id": "C004",
+          "value": "mod_box_people",
+          "description": "相关明星",
+          "status": true,
+          "enable": true
+        },
+        {
+          "id": "C005",
+          "value": "mod_box_vplus",
+          "description": "相关用户",
+          "status": true,
+          "enable": true
+        },
+        {
+          "id": "C006",
+          "value": "mod_box_recommend",
+          "description": "相关推荐",
+          "status": true,
+          "enable": true
+        },
+        {
+          "id": "C007",
+          "value": "mod_box_hotlist",
+          "description": "热搜榜单",
+          "status": true,
+          "enable": true
+        },
+        {
+          "id": "C008",
+          "value": "result_relative",
+          "description": "相关搜索",
+          "status": true,
+          "enable": true
+        },
+        {
+          "id": "C009",
+          "value": "site_footer",
+          "description": "页脚",
+          "status": true,
+          "enable": true
+        },
+
+        {
+          "id": "C010",
+          "value": "head_line",
+          "description": "顶部一条线",
+          "status": true,
+          "enable": true
+        },
+        {
+          "id": "C011",
+          "value": "x_fixed_tool",
+          "description": "辅助工具栏",
+          "status": true,
+          "enable": true
+        },
+        {
+          "id": "C012",
+          "value": "mod_ad_search",
+          "description": "广告位",
+          "status": true,
+          "enable": true
+        },
+        {
+          "id": "C013",
+          "value": "quick_vip_meta",
+          "description": "开通VIP",
+          "status": true,
+          "enable": false
+        },
+        {
+          "id": "C014",
+          "value": "quick_vip_meta",
+          "description": "开通VIP",
+          "status": true,
+          "enable": false
+        }
+      ],
+      "history": [
+        {
+          "id": "D001",
+          "value": "head_line",
+          "description": "顶部一条线",
+          "status": true,
+          "enable": true
+        },
+        {
+          "id": "D012",
+          "value": "site_logo",
+          "description": "腾讯视频图标",
+          "status": true,
+          "enable": true
+        },
+        {
+          "id": "D013",
+          "value": "site_channel",
+          "description": "频道",
+          "status": true,
+          "enable": true
+        },
+        {
+          "id": "D002",
+          "value": "mod_quick",
+          "description": "顶部用户栏",
+          "status": true,
+          "enable": true
+        },
+        {
+          "id": "D003",
+          "value": "content_ad",
+          "description": "广告位",
+          "status": true,
+          "enable": true
+        },
+        {
+          "id": "D004",
+          "value": "quick_vip_meta",
+          "description": "开通VIP",
+          "status": true,
+          "enable": false
+        },
+        {
+          "id": "D005",
+          "value": "btn_vip",
+          "description": "开通VIP2",
+          "status": true,
+          "enable": false
+        },
+        {
+          "id": "D006",
+          "value": "mod_search",
+          "description": "搜索栏",
+          "status": false,
+          "enable": true
+        },
+        {
+          "id": "D007",
+          "value": "user_info",
+          "description": "用户信息",
+          "status": true,
+          "enable": true
+        },
+        {
+          "id": "D008",
+          "value": "navigate_list",
+          "description": "功能栏",
+          "status": true,
+          "enable": true
+        },
+        {
+          "id": "D009",
+          "value": "site_footer",
+          "description": "页脚",
+          "status": true,
+          "enable": true
+        },
+        {
+          "id": "D011",
+          "value": "x_fixed_tool",
+          "description": "辅助工具栏",
+          "status": true,
+          "enable": true
+        }
+      ]
+    }
+  },
+  "app": [
+    {
+      "id": "X001",
+      "value": "",
+      "description": "隐藏标题栏",
+      "status": true,
+      "enable": false
+    },
+    {
+      "id": "X002",
+      "value": "历史页",
+      "description": "默认主页",
+      "status": true,
+      "enable": true
+    },
+    {
+      "id": "X003",
+      "value": "",
+      "description": "搜索页不缓存",
+      "status": false,
+      "enable": true
+    },
+    {
+      "id": "X004",
+      "value": "",
+      "description": "历史页不缓存",
+      "status": false,
+      "enable": true
+    }
+  ]
+}
