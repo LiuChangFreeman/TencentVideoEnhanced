@@ -1,1 +1,2 @@
 # TencentVideoEnhanced
+专供win10使用的腾讯视频H5封装版，针对UWP特性进行大量的适配，并且提供一些小功能
