@@ -19,33 +19,40 @@
             NewWindowRequested="NewWindowRequested"
             SizeChanged="SizeChanged"
             FrameDOMContentLoaded="FrameDOMContentLoaded"
-            AllowDrop="False" 
             NavigationStarting="NavigationStarting" 
         />
-       <Grid x:Name="Blur" Background="#FF1765A8">
+
+        <Grid x:Name="Animation">
+            <Grid x:Name="Blur" Background="#FF1765A8">
+            </Grid>
+            <ProgressRing x:Name="Loading" Width="80" Height="80" Margin="0,0,0,100">
+            </ProgressRing>
+            <TextBlock 
+                x:Name="Information" 
+                VerticalAlignment="Center" Margin="0,200,0,0" 
+                TextAlignment="Center" Foreground="White" 
+                FontFamily="DengXian" FontSize="36"
+            >
+            等待网页响应......
+            </TextBlock>
         </Grid>
-        <ProgressRing x:Name="Loading" Width="80" Height="80" Margin="0,0,0,100">
-        </ProgressRing>
-        <TextBlock 
-            x:Name="Information" 
-            VerticalAlignment="Center" Margin="0,200,0,0" 
-            TextAlignment="Center" Foreground="White" 
-            FontFamily="DengXian" FontSize="36"
-        >
-        等待网页响应......
-        </TextBlock>
-        <Button x:Name="Refresh" Content="&#xE72C;" 
+
+        <Grid x:Name="TitleArea" Background="Transparent" Height="31" VerticalAlignment="Top" >
+        </Grid>
+        <Grid>
+            <Button x:Name="Refresh" Content="&#xE72C;" 
                 FontFamily="Segoe MDL2 Assets" Background="Transparent" 
-                Click="Refresh_Click" HorizontalAlignment="Right"   
+                Click="Refresh_Click" HorizontalAlignment="Left"   
                 VerticalAlignment="Top" Height="31"
-                Foreground="White" Margin="0,31,92,0" Width="46"
+                Foreground="White" Margin="46,0,0,0" Width="46"
                 ToolTipService.ToolTip="刷新"
             />
-        <Button x:Name="Go" Content="&#xE8B2;" 
-                FontFamily="Segoe MDL2 Assets" Background="Transparent" HorizontalAlignment="Right"   
+            <Button x:Name="Go" Content="&#xE8B2;" 
+                FontFamily="Segoe MDL2 Assets" Background="Transparent" HorizontalAlignment="Left"   
                 VerticalAlignment="Top" Height="31"
-                Foreground="White" Margin="0,31,46,0" Width="46"
-                ToolTipService.ToolTip="立刻进入" Click="Go_Click"
-            />
+                Foreground="White" Width="46"
+                ToolTipService.ToolTip="立刻进入" Click="Go_Click" Margin="92,0,0,0"
+        />
+        </Grid>
     </Grid>
 </Page>

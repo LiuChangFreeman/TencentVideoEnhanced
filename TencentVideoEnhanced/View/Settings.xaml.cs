@@ -8,6 +8,7 @@ using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
 using TencentVideoEnhanced.Model;
+using Windows.ApplicationModel;
 using Windows.ApplicationModel.Core;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
@@ -20,6 +21,8 @@ using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
+using System.Net.Http;
+using System.Net;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
 
@@ -76,9 +79,7 @@ namespace TencentVideoEnhanced.View
             var result = await md.ShowAsync();
             if (result.Id as string == "重置")
             {
-                StorageFile JsonRules = await StorageFile.GetFileFromApplicationUriAsync(new Uri("ms-appx:///Data/rules.json"));
-                string StringRules = await FileIO.ReadTextAsync(JsonRules);
-                App.Rules = JsonConvert.DeserializeObject<Rules>(StringRules);
+                App.Rules = await LocalObjectStorageHelper.ReadFileAsync<Rules>("rules_origin");
                 await LocalObjectStorageHelper.SaveFileAsync("rules", App.Rules);
                 LocalObjectStorageHelper.Save("settings", App.Rules.GetSettings());
             }
@@ -89,6 +90,68 @@ namespace TencentVideoEnhanced.View
             if (result.Id as string == "重启")
             {
                 await CoreApplication.RequestRestartAsync(string.Empty);
+            }
+        }
+
+        private async void UpdateSettings_Click(object sender, RoutedEventArgs e)
+        {
+            Rules Rules;
+            using (HttpClient HttpClient = new HttpClient())
+            {
+                HttpClient.Timeout = TimeSpan.FromSeconds(10);
+                var HttpResopnse = await HttpClient.GetAsync(Utils.UpdateRulesUri);
+                if (HttpResopnse.StatusCode == HttpStatusCode.OK)
+                {
+                    string StringRules = await HttpResopnse.Content.ReadAsStringAsync();
+                    Rules = JsonConvert.DeserializeObject<Rules>(StringRules);
+                    if (Rules == null)
+                    {
+                        MessageDialog md = new MessageDialog("未知错误", "更新失败");
+                        md.Commands.Add(new UICommand("确定", cmd => { }));
+                        await md.ShowAsync();
+                        return;
+                    }
+                    if (Rules.version > App.Rules.version)
+                    {
+                        MessageDialog md = new MessageDialog("请问是否更新？", "已检测到新的更新");
+                        md.Commands.Add(new UICommand("确定", cmd => { },"更新"));
+                        md.Commands.Add(new UICommand("取消", cmd => { }));
+                        var result = await md.ShowAsync();
+                        if (result.Id as string == "更新")
+                        {
+                            LocalObjectStorageHelper LocalObjectStorageHelper = new LocalObjectStorageHelper();
+                            await LocalObjectStorageHelper.SaveFileAsync("rules_origin", Rules);
+                            await LocalObjectStorageHelper.SaveFileAsync("rules", Rules);
+                            var NewSettings = Rules.GetSettings();
+                            var OldSettings = App.Rules.GetSettings();
+                            foreach (var Item in OldSettings)
+                            {
+                                if (NewSettings.ContainsKey(Item.Key))
+                                {
+                                    NewSettings[Item.Key] = Item.Value;
+                                }
+                            }
+                            LocalObjectStorageHelper.Save("settings", NewSettings);
+                            Rules.SetSettings(NewSettings);
+                            App.Rules = Rules;
+                            md = new MessageDialog("某些设置将在重启后生效", "更新成功!");
+                            md.Commands.Add(new UICommand("确定", cmd => { }));
+                            await md.ShowAsync();
+                        }
+                    }
+                    else
+                    {
+                        MessageDialog md = new MessageDialog("您无需更新", "已经是最新版本了");
+                        md.Commands.Add(new UICommand("确定", cmd => { }));
+                        await md.ShowAsync();
+                    }
+                }
+                else
+                {
+                    MessageDialog md = new MessageDialog("请检查您的网络", "更新失败");
+                    md.Commands.Add(new UICommand("确定", cmd => { }));
+                    await md.ShowAsync();
+                }
             }
         }
     }

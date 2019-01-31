@@ -49,10 +49,19 @@ namespace TencentVideoEnhanced
         {
 
             LocalObjectStorageHelper LocalObjectStorageHelper = new LocalObjectStorageHelper();
+            if (!await LocalObjectStorageHelper.FileExistsAsync("rules_origin"))
+            {
+                var Folder = await Package.Current.InstalledLocation.GetFolderAsync("Data");
+                var FileRules = await Folder.GetFileAsync("rules.json");
+                string StringRules = await FileIO.ReadTextAsync(FileRules);
+                var TempRules = JsonConvert.DeserializeObject<Rules>(StringRules);
+                await LocalObjectStorageHelper.SaveFileAsync("rules_origin", TempRules);
+            }
             if (!await LocalObjectStorageHelper.FileExistsAsync("rules"))
             {
-                StorageFile JsonRules = await StorageFile.GetFileFromApplicationUriAsync(new Uri("ms-appx:///Data/rules.json"));
-                string StringRules = await FileIO.ReadTextAsync(JsonRules);
+                var Folder = await Package.Current.InstalledLocation.GetFolderAsync("Data");
+                var FileRules = await Folder.GetFileAsync("rules.json");
+                string StringRules = await FileIO.ReadTextAsync(FileRules);
                 Rules = JsonConvert.DeserializeObject<Rules>(StringRules);
                 await LocalObjectStorageHelper.SaveFileAsync("rules", Rules);
             }

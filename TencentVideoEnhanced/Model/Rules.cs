@@ -14,11 +14,11 @@ namespace TencentVideoEnhanced.Model
     {
         public event PropertyChangedEventHandler PropertyChanged;
 
-        private string _time;
-        public string time
+        private int _version;
+        public int version
         {
-            get { return _time; }
-            set { _time = value; PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("time")); }
+            get { return _version; }
+            set { _version = value; PropertyChanged?.Invoke(this, new PropertyChangedEventArgs("version")); }
         }
 
         private RulesContent _rules;

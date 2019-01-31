@@ -1,4 +1,4 @@
-﻿using System;
+﻿using System.Threading;
 using Windows.Storage;
 using Windows.UI.Xaml.Controls;
 using TencentVideoEnhanced.Model;
@@ -21,8 +21,6 @@ namespace TencentVideoEnhanced
     /// </summary>
     public sealed partial class MainPage : Page
     {
-        private Rules Rules;
-
         public MainPage()
         {
             this.InitializeComponent();
@@ -31,6 +29,7 @@ namespace TencentVideoEnhanced
 
         private void Init()
         {
+            AutoUpdateRules();
             CoreApplication.GetCurrentView().TitleBar.ExtendViewIntoTitleBar = true;
             var TitleBar = ApplicationView.GetForCurrentView().TitleBar;
             TitleBar.BackgroundColor = Colors.Transparent;
@@ -38,6 +37,16 @@ namespace TencentVideoEnhanced
             TitleBar.ButtonInactiveForegroundColor = Colors.Transparent;
             TitleBar.ButtonInactiveBackgroundColor = Colors.Transparent;
             MainFrame.Navigate(typeof(ShellPage));
+        }
+
+        private void AutoUpdateRules()
+        {
+            RulesItem AutoUpadte = Utils.GetRulesItemById("X005");
+            if (AutoUpadte.status)
+            {
+                Thread thread = new Thread(new ThreadStart(Utils.GetLatestRules));
+                thread.Start();
+            }
         }
     }
 }

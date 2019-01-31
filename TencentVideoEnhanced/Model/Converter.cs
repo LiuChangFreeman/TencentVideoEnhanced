@@ -13,7 +13,7 @@ namespace TencentVideoEnhanced.Model
 {
     public class ToggleSwitchVisibilityConverter : IValueConverter
     {
-        private Collection<string> ShowAsToggleButton = new Collection<string>(){ "X001", "X003", "X004" };
+        private Collection<string> ShowAsToggleButton = new Collection<string>(){ "X001", "X003", "X004", "X005" };
 
         public object Convert(object value, Type targetType, object parameter, string language)
         {

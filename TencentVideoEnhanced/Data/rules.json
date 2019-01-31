@@ -1,5 +1,5 @@
 ﻿{
-  "time": "1548477021",
+  "version": 1,
   "rules": {
     "eval": [
       {
@@ -199,7 +199,14 @@
         {
           "id": "B022",
           "value": "player_container_wide_switch",
-          "description": "隐藏侧边栏按钮(已失效)",
+          "description": "侧边栏按钮(已失效)",
+          "status": true,
+          "enable": true
+        },
+        {
+          "id": "B023",
+          "value": "site_head_placeholder",
+          "description": "顶部空白",
           "status": true,
           "enable": true
         }
@@ -420,6 +427,13 @@
       "value": "",
       "description": "历史页不缓存",
       "status": false,
+      "enable": true
+    },
+    {
+      "id": "X005",
+      "value": "",
+      "description": "自动更新设置规则",
+      "status": true,
       "enable": true
     }
   ]

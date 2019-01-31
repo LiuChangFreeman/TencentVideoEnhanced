@@ -58,6 +58,7 @@ namespace TencentVideoEnhanced.View
             SystemNavigationManager SystemNavigationManager = SystemNavigationManager.GetForCurrentView();
             SystemNavigationManager.BackRequested += BackRequested;
             SystemNavigationManager.AppViewBackButtonVisibility = AppViewBackButtonVisibility.Visible;
+            Window.Current.SetTitleBar(TitleArea);
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)
@@ -132,6 +133,13 @@ namespace TencentVideoEnhanced.View
 
         private void DOMContentLoaded(WebView sender, WebViewDOMContentLoadedEventArgs args)
         {
+            foreach (RulesItem item in App.Rules.rules.compact.video)
+            {
+                if (item.status)
+                {
+                    RemoveElementsByClassName(item.value);
+                }
+            }
             AdaptWebViewWithWindow();
             Information.Text = "正在加载内容......";
         }
@@ -175,14 +183,17 @@ namespace TencentVideoEnhanced.View
         private void ContainsFullScreenElementChanged(WebView sender, object args)
         {
             var applicationView = ApplicationView.GetForCurrentView();
-
             if (sender.ContainsFullScreenElement)
             {
                 applicationView.TryEnterFullScreenMode();
+                Go.Visibility = Visibility.Collapsed;
+                Refresh.Visibility = Visibility.Collapsed;
             }
             else if (applicationView.IsFullScreenMode)
             {
                 applicationView.ExitFullScreenMode();
+                Go.Visibility = Visibility.Visible;
+                Refresh.Visibility = Visibility.Visible;
             }
         }
 
