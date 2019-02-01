@@ -154,5 +154,17 @@ namespace TencentVideoEnhanced.View
                 }
             }
         }
+
+        private async void Slider_ValueChanged(object sender, RangeBaseValueChangedEventArgs e)
+        {
+            //在初始化的时候会自动触发，原因不明
+            if (!PageLoaded)
+            {
+                return;
+            }
+            //等待数据绑定同步
+            await Task.Delay(1);
+            await LocalObjectStorageHelper.SaveFileAsync("rules", App.Rules);
+        }
     }
 }

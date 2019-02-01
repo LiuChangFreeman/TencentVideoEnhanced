@@ -22,6 +22,7 @@ using Windows.Foundation.Metadata;
 using Windows.UI;
 using Windows.UI.Core;
 using Windows.ApplicationModel.Core;
+using System.Threading;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
 
@@ -90,33 +91,24 @@ namespace TencentVideoEnhanced.View
             e.Handled = true;
         }
 
-        private string TransferTemplate(string format)
-        {
-            //替换回String.Format标准格式
-            var temp = format.Replace("{{", "_-_").Replace("}}", "-_-");
-            temp = temp.Replace("{", "{{").Replace("}", "}}");
-            temp = temp.Replace("_-_", "{").Replace("-_-", "}");
-            return temp;
-        }
-
         private async void AdaptWebViewWithWindow()
         {
             //窗口改变大小时，重新调整元素的宽高
             string template = "var width=document.body.clientWidth;var elements = document.getElementsByClassName('{{0}}');if (elements.length > 0){elements[0].style.width=width+'px';}";
-            template = TransferTemplate(template);
+            template = Utils.TransferTemplate(template);
             var script = string.Format(template, "container_inner");
             await MainWebView.InvokeScriptAsync("eval", new string[] { script });
             template = "var elements = document.getElementsByClassName('{{0}}');if (elements.length > 0){elements[0].style.height='100%';}";
-            template = TransferTemplate(template);
+            template = Utils.TransferTemplate(template);
             script = string.Format(template, "mod_player");
             await MainWebView.InvokeScriptAsync("eval", new string[] { script });
             template = "var width=document.body.clientWidth;var elements = document.getElementsByClassName('{{0}}');if (elements.length > 0){elements[0].style.width=width-320+'px';}";
-            template = TransferTemplate(template);
+            template = Utils.TransferTemplate(template);
             script = string.Format(template, "mod_player_section");
             await MainWebView.InvokeScriptAsync("eval", new string[] { script });
             var height = MainWebView.ActualHeight;
             template = "var elements = document.getElementsByClassName('{{0}}');if (elements.length > 0){elements[0].style.height='{{1}}px';}";
-            template = TransferTemplate(template);
+            template = Utils.TransferTemplate(template);
             script = string.Format(template, "mod_player_section", height);
             await MainWebView.InvokeScriptAsync("eval", new string[] { script });
             script = string.Format(template, "scroll_wrap", height);
@@ -165,6 +157,12 @@ namespace TencentVideoEnhanced.View
             Loading.IsActive = false;
             Blur.Visibility = Visibility.Collapsed;
             Information.Visibility = Visibility.Collapsed;
+            RulesItem TimeLine = Utils.GetRulesItemById("X006");
+            if (TimeLine.status)
+            {
+                Thread thread = new Thread(new ThreadStart(AddToTimeLine));
+                thread.Start();
+            }
         }
 
         private async void EvalScripts(string script)
@@ -175,7 +173,7 @@ namespace TencentVideoEnhanced.View
         private void RemoveElementsByClassName(string ClassName)
         {
             string template = "while(true){var elements = document.getElementsByClassName('{{0}}');if(elements.length>0){for(var i=0;i<elements.length;i++){elements[i].parentNode.removeChild(elements[i]);} }else{break;} }";
-            template = TransferTemplate(template);
+            template = Utils.TransferTemplate(template);
             string script = string.Format(template, ClassName);
             EvalScripts(script);
         }
@@ -199,10 +197,10 @@ namespace TencentVideoEnhanced.View
 
         private void NewWindowRequested(WebView sender, WebViewNewWindowRequestedEventArgs args)
         {
-            args.Handled = true;
             string Url = args.Uri.ToString();
-            if (Url.Contains("cover") || Url.Contains("page"))
+            if (Url.Contains("v.qq.com") &&(Url.Contains("cover") || Url.Contains("page")))
             {
+                args.Handled = true;
                 MainWebView.Navigate(args.Uri);
             }
         }
@@ -240,6 +238,40 @@ namespace TencentVideoEnhanced.View
             Loading.IsActive = false;
             Blur.Visibility = Visibility.Collapsed;
             Information.Visibility = Visibility.Collapsed;
+        }
+
+        private async Task<Activity> GetActivity()
+        {
+            Activity Activity = new Activity();
+            string template = "var metas = document.getElementsByTagName('meta');for(var i=0;i<metas.length;i++){if(metas[i].getAttribute('itemprop')=='{{0}}'){metas[i].content;break;} }";
+            template = Utils.TransferTemplate(template);
+            var script = string.Format(template, "url");
+            Activity.url = await MainWebView.InvokeScriptAsync("eval", new string[] { script });
+            script = string.Format(template, "image");
+            Activity.image = await MainWebView.InvokeScriptAsync("eval", new string[] { script });
+            template = "var metas = document.getElementsByTagName('meta');for(var i=0;i<metas.length;i++){if(metas[i].name=='{{0}}'){metas[i].content;break;} }";
+            template = Utils.TransferTemplate(template);
+            script = string.Format(template, "title");
+            Activity.title = await MainWebView.InvokeScriptAsync("eval", new string[] { script });
+            script = string.Format(template, "description");
+            Activity.description = await MainWebView.InvokeScriptAsync("eval", new string[] { script });
+            return Activity;
+        }
+
+        private async void AddToTimeLine()
+        {
+            RulesItem TimeLine = Utils.GetRulesItemById("X006");
+            int TimeDelay = int.Parse(TimeLine.value)*60*1000;
+            await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
+            {
+                Activity PrevousActivity =await GetActivity();
+                await Task.Delay(TimeDelay);
+                Activity NowActivity = await GetActivity();
+                if (NowActivity == PrevousActivity)
+                {
+                    Utils.AddToTimeLine(NowActivity);
+                }
+            });
         }
     }
 }

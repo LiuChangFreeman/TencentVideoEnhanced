@@ -84,7 +84,7 @@ namespace TencentVideoEnhanced.View
         {
             string Url = args.Uri.ToString();
             args.Handled = true;
-            if (Url.Contains("cover") || Url.Contains("page"))
+            if (Url.Contains("v.qq.com") && (Url.Contains("cover") || Url.Contains("page")))
             {
                 var CurrentFrame = Window.Current.Content as Frame;
                 var MainPage = CurrentFrame.Content as MainPage;
@@ -107,16 +107,18 @@ namespace TencentVideoEnhanced.View
             }
             var width = HistoryWebView.ActualHeight;
             string template = "var elements = document.getElementsByClassName('{{0}}');if (elements.length > 0){elements[0].style.width='{{1}}';elements[0].style.float='left';};document.body.style.overflowX='hidden';";
-            template = TransferTemplate(template);
+            template = Utils.TransferTemplate(template);
             string script = string.Format(template, "wrapper_main",width);
             await HistoryWebView.InvokeScriptAsync("eval", new string[] { script });
 
             template = "var elements = document.getElementsByClassName('{{0}}');if (elements.length > 0){elements[0].style.position='relative';elements[0].style.left='100px';elements[0].style.margin='0px';}";
-            template = TransferTemplate(template);
+            template = Utils.TransferTemplate(template);
             script = string.Format(template, "mod_search");
             await HistoryWebView.InvokeScriptAsync("eval", new string[] { script });
-            
 
+            //使所有链接都触发新窗口
+            script = "var elements = document.getElementsByTagName('a');for(var i=0;i<elements.length;i++){elements[i].target='_blank';}";
+            await HistoryWebView.InvokeScriptAsync("eval", new string[] { script });
 
             Loading.IsActive = false;
             Blur.Visibility = Visibility.Collapsed;
@@ -126,7 +128,7 @@ namespace TencentVideoEnhanced.View
         {
             var width = HistoryWebView.ActualHeight;
             string template = "var elements = document.getElementsByClassName('{{0}}');if (elements.length > 0){elements[0].style.width='{{1}}px';}";
-            template = TransferTemplate(template);
+            template = Utils.TransferTemplate(template);
             string script = string.Format(template, "wrapper_main", width);
             await HistoryWebView.InvokeScriptAsync("eval", new string[] { script });
         }
@@ -134,18 +136,9 @@ namespace TencentVideoEnhanced.View
         private async void RemoveElementsByClassName(string ClassName)
         {
             string template = "while(true){var elements = document.getElementsByClassName('{{0}}');if(elements.length>0){for(var i=0;i<elements.length;i++){elements[i].parentNode.removeChild(elements[i]);} }else{break;} }";
-            template = TransferTemplate(template);
+            template = Utils.TransferTemplate(template);
             string script = string.Format(template, ClassName);
             await HistoryWebView.InvokeScriptAsync("eval", new string[] { script });
-        }
-
-        private string TransferTemplate(string format)
-        {
-            //替换回String.Format标准格式
-            var temp = format.Replace("{{", "_-_").Replace("}}", "-_-");
-            temp = temp.Replace("{", "{{").Replace("}", "}}");
-            temp = temp.Replace("_-_", "{").Replace("-_-", "}");
-            return temp;
         }
 
         private void HistoryWebView_SizeChanged(object sender, SizeChangedEventArgs e)

@@ -13,7 +13,11 @@
     <Page.Resources>
         <data:ToggleSwitchVisibilityConverter x:Key="ToggleSwitchVisibilityConverter"/>
         <data:ToggleButtonVisibilityConverter x:Key="ToggleButtonVisibilityConverter"/>
+        <data:SliderVisibilityConverter x:Key="SliderVisibilityConverter"/>
         <data:ToggleButtonContentConverter x:Key="ToggleButtonContentConverter"/>
+        <data:SliderValueConverter x:Key="SliderValueConverter"/>
+        <data:SliderHeaderTextConverter x:Key="SliderHeaderTextConverter"/>
+
 
         <DataTemplate x:Key="SettingsTemplate" x:DataType="data:Rules">
             <Grid>
@@ -33,7 +37,7 @@
                                     >
                                         <ListView.ItemTemplate>
                                             <DataTemplate x:DataType="data:RulesItem" >
-                                                <Grid>
+                                                <StackPanel>
                                                     <ToggleSwitch 
                                                         Visibility="{x:Bind id,Converter={StaticResource ToggleSwitchVisibilityConverter}}"
                                                         Header="{x:Bind description}"
@@ -54,7 +58,16 @@
                                                         >
                                                         </ToggleButton>
                                                     </StackPanel>
-                                                </Grid>
+                                                    <Slider 
+                                                        Header="{x:Bind value,Converter={StaticResource SliderHeaderTextConverter},Mode=OneWay}"
+                                                        Visibility="{x:Bind id,Converter={StaticResource SliderVisibilityConverter}}"
+                                                        IsEnabled="{x:Bind status,Mode=OneWay}"
+                                                        Maximum="10" Minimum="0"
+                                                        LargeChange="3" SmallChange="1"
+                                                        Value="{x:Bind value,Converter={StaticResource SliderValueConverter},Mode=TwoWay}" ValueChanged="Slider_ValueChanged"
+                                                    >
+                                                    </Slider>
+                                                </StackPanel>
                                             </DataTemplate>
                                         </ListView.ItemTemplate>
                                     </ListView>
@@ -155,16 +168,18 @@
                         </ScrollViewer>
                     </PivotItem>
                     <PivotItem Header="关于">
-                        <StackPanel>
-                            <StackPanel Orientation="Horizontal">
+                        <ScrollViewer VerticalScrollBarVisibility="Hidden">
+                            <ScrollViewer.Content>
+                                <StackPanel>
+                                    <StackPanel Orientation="Horizontal">
                                 <TextBlock FontSize="20" Margin="30,10,0,0" HorizontalAlignment="Left" VerticalAlignment="Center">当前增强规则版本: v</TextBlock>
                                 <TextBlock FontSize="20" Margin="0,10,0,0" HorizontalAlignment="Left" VerticalAlignment="Center" Text="{x:Bind version}"></TextBlock>
                             </StackPanel>
-                            <Button x:Name="UpdateSettings" Margin="30,10,10,10" Content="更新规则" Click="UpdateSettings_Click" ></Button>
+                                    <Button x:Name="UpdateSettings" Margin="30,10,10,10" Content="更新规则" Click="UpdateSettings_Click" ></Button>
                             <TextBlock FontSize="20" Margin="30,10,0,2" HorizontalAlignment="Left" VerticalAlignment="Center" FontWeight="Bold">
-                                本应用为腾讯视频第三方版本v1.0.11，基于官方H5网页版
+                                本应用为腾讯视频第三方版本v1.0.12，基于官方H5网页版
                             </TextBlock>
-                            <StackPanel Orientation="Horizontal">
+                                    <StackPanel Orientation="Horizontal">
                                 <TextBlock FontSize="16" Margin="30,2,0,2" HorizontalAlignment="Left" VerticalAlignment="Center">
                                     源代码请参阅:
                                 </TextBlock>
@@ -174,10 +189,43 @@
                                 Content="GitHub项目地址" NavigateUri="https://github.com/LiuChangFreeman/TencentVideoEnhanced"
                                 />
                             </StackPanel>
-                            <TextBlock FontSize="16" Margin="30,2,0,2" HorizontalAlignment="Left" VerticalAlignment="Center">
+                                    <TextBlock FontSize="16" Margin="30,2,0,2" HorizontalAlignment="Left" VerticalAlignment="Center">
                                 如有任何需求或者建议请在GitHub上提出
-                            </TextBlock>
-                        </StackPanel>
+                                    </TextBlock>
+                                    <TextBlock FontSize="12" Margin="30,5,0,2" HorizontalAlignment="Left" VerticalAlignment="Center" TextAlignment="Justify">
+                                        <Run ></Run>
+                                        <Run>版本v1.0.12更新日志</Run>
+                                        <LineBreak/>
+                                        <Run>1、加入时间线</Run>
+                                        <LineBreak/>
+                                        <Run>2、修复广告详情不能弹出的BUG</Run>
+                                        <LineBreak/>
+                                        
+                                        <LineBreak/>
+                                        <Run></Run>
+                                        <Run>版本v1.0.10更新日志</Run>
+                                        <LineBreak/>
+                                        <Run>1、修复大量BUG</Run>
+                                        <LineBreak/>
+                                        
+                                        <LineBreak/>
+                                        <Run></Run>
+                                        <Run>版本v1.0.10更新日志</Run>
+                                        <LineBreak/>
+                                        <Run>1、加入视频观看历史</Run>
+                                        <LineBreak/>
+                                        
+                                        <LineBreak/>
+                                        <Run></Run>
+                                        <Run>版本v1.0.9更新日志</Run>
+                                        <LineBreak/>
+                                        <Run>1、重构增强规则引擎</Run>
+                                        <LineBreak/>
+                                        
+                                    </TextBlock>
+                                </StackPanel>
+                            </ScrollViewer.Content>
+                        </ScrollViewer>
                     </PivotItem>
                 </Pivot>
             </Grid>

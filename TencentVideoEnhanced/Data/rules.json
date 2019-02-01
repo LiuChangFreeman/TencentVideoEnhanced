@@ -1,9 +1,53 @@
 ﻿{
-  "version": 1,
+  "version": 2,
+  "app": [
+    {
+      "id": "X001",
+      "value": "",
+      "description": "隐藏标题栏",
+      "status": true,
+      "enable": false
+    },
+    {
+      "id": "X002",
+      "value": "历史页",
+      "description": "默认主页",
+      "status": true,
+      "enable": true
+    },
+    {
+      "id": "X003",
+      "value": "",
+      "description": "搜索页不缓存",
+      "status": false,
+      "enable": true
+    },
+    {
+      "id": "X004",
+      "value": "",
+      "description": "历史页不缓存",
+      "status": false,
+      "enable": true
+    },
+    {
+      "id": "X005",
+      "value": "",
+      "description": "自动更新增强规则",
+      "status": true,
+      "enable": true
+    },
+    {
+      "id": "X006",
+      "value": "1",
+      "description": "在时间线中继续观看",
+      "status": true,
+      "enable": true
+    }
+  ],
   "rules": {
     "eval": [
       {
-        "id":"A001",
+        "id": "A001",
         "value": "var notvip=document.getElementsByClassName('icon_vip_grey').length>0;var content=document.getElementsByClassName('txp_popup_content');if(content.length>0){var children=content[0].childNodes;for(var i=0;i<children.length;i++){var child=children[i];var temp=$(child).attr('data-definition');if(temp=='pcclient'||(temp=='fhd'&&notvip)){content[0].removeChild(child);}}}",
         "description": "移除不可用分辨率",
         "status": true,
@@ -366,7 +410,7 @@
           "id": "D006",
           "value": "mod_search",
           "description": "搜索栏",
-          "status": false,
+          "status": true,
           "enable": true
         },
         {
@@ -399,42 +443,5 @@
         }
       ]
     }
-  },
-  "app": [
-    {
-      "id": "X001",
-      "value": "",
-      "description": "隐藏标题栏",
-      "status": true,
-      "enable": false
-    },
-    {
-      "id": "X002",
-      "value": "历史页",
-      "description": "默认主页",
-      "status": true,
-      "enable": true
-    },
-    {
-      "id": "X003",
-      "value": "",
-      "description": "搜索页不缓存",
-      "status": false,
-      "enable": true
-    },
-    {
-      "id": "X004",
-      "value": "",
-      "description": "历史页不缓存",
-      "status": false,
-      "enable": true
-    },
-    {
-      "id": "X005",
-      "value": "",
-      "description": "自动更新设置规则",
-      "status": true,
-      "enable": true
-    }
-  ]
+  }
 }

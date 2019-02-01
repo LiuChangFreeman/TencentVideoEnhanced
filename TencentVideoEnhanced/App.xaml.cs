@@ -23,6 +23,7 @@ using Newtonsoft.Json;
 using Windows.Storage;
 using TencentVideoEnhanced.Model;
 using Windows.UI.Popups;
+using TencentVideoEnhanced.View;
 
 namespace TencentVideoEnhanced
 {
@@ -40,6 +41,7 @@ namespace TencentVideoEnhanced
             this.InitializeComponent();
             this.Suspending += OnSuspending;
             this.UnhandledException += OnUnhandledException;
+            RegisterExceptionHandlingSynchronizationContext();
             InitRules();
         }
 
@@ -120,8 +122,6 @@ namespace TencentVideoEnhanced
                 Window.Current.Activate();
             }
 
-            RegisterExceptionHandlingSynchronizationContext();
-
         }
 
         /// <summary>
@@ -146,6 +146,35 @@ namespace TencentVideoEnhanced
             var deferral = e.SuspendingOperation.GetDeferral();
             //TODO: 保存应用程序状态并停止任何后台活动
             deferral.Complete();
+        }
+
+        protected override void OnActivated(IActivatedEventArgs e)
+        {
+            if (e.Kind == ActivationKind.Protocol)
+            {
+                var uriArgs = e as ProtocolActivatedEventArgs;
+                if (uriArgs != null)
+                {
+                    if (uriArgs.Uri.AbsolutePath == "video")
+                    {
+                        string Url = uriArgs.Uri.Query.Substring(5);
+                        Frame rootFrame = Window.Current.Content as Frame;
+                        if (rootFrame == null)
+                        {
+                            rootFrame = new Frame();
+                            rootFrame.NavigationFailed += OnNavigationFailed;
+                            Window.Current.Content = rootFrame;
+                        }
+                        if (rootFrame.Content == null)
+                        {
+                            rootFrame.Navigate(typeof(MainPage));
+                        }
+                        var mainPage = rootFrame.Content as MainPage;
+                        mainPage.MainFrame.Navigate(typeof(VideoPlayer), Url);
+                    }
+                }
+            }
+            Window.Current.Activate();
         }
 
         private async void OnUnhandledException(object sender, Windows.UI.Xaml.UnhandledExceptionEventArgs e)
