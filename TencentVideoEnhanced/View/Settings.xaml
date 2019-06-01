@@ -193,6 +193,13 @@
                                 如有任何需求或者建议请在GitHub上提出
                                     </TextBlock>
                                     <TextBlock FontSize="12" Margin="30,5,0,2" HorizontalAlignment="Left" VerticalAlignment="Center" TextAlignment="Justify">
+                                                                                <Run ></Run>
+                                        <Run>版本v1.0.13更新日志</Run>
+                                        <LineBreak/>
+                                        <Run>1、修复历史页显示bug</Run>
+                                        <LineBreak/>
+                                        <LineBreak/>
+                                        
                                         <Run ></Run>
                                         <Run>版本v1.0.12更新日志</Run>
                                         <LineBreak/>

@@ -108,7 +108,7 @@ namespace TencentVideoEnhanced.View
             var width = HistoryWebView.ActualHeight;
             string template = "var elements = document.getElementsByClassName('{{0}}');if (elements.length > 0){elements[0].style.width='{{1}}';elements[0].style.float='left';};document.body.style.overflowX='hidden';";
             template = Utils.TransferTemplate(template);
-            string script = string.Format(template, "wrapper_main",width);
+            string script = string.Format(template, "site_main", width);
             await HistoryWebView.InvokeScriptAsync("eval", new string[] { script });
 
             template = "var elements = document.getElementsByClassName('{{0}}');if (elements.length > 0){elements[0].style.position='relative';elements[0].style.left='100px';elements[0].style.margin='0px';}";
