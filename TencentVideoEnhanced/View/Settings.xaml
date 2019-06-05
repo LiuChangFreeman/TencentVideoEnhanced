@@ -177,7 +177,7 @@
                             </StackPanel>
                                     <Button x:Name="UpdateSettings" Margin="30,10,10,10" Content="更新规则" Click="UpdateSettings_Click" ></Button>
                             <TextBlock FontSize="20" Margin="30,10,0,2" HorizontalAlignment="Left" VerticalAlignment="Center" FontWeight="Bold">
-                                本应用为腾讯视频第三方版本v1.0.12，基于官方H5网页版
+                                本应用为腾讯视频第三方版本v1.0.14，基于官方H5网页版
                             </TextBlock>
                                     <StackPanel Orientation="Horizontal">
                                 <TextBlock FontSize="16" Margin="30,2,0,2" HorizontalAlignment="Left" VerticalAlignment="Center">
@@ -193,10 +193,16 @@
                                 如有任何需求或者建议请在GitHub上提出
                                     </TextBlock>
                                     <TextBlock FontSize="12" Margin="30,5,0,2" HorizontalAlignment="Left" VerticalAlignment="Center" TextAlignment="Justify">
-                                                                                <Run ></Run>
+                                        <Run ></Run>
+                                        <Run>版本v1.0.14更新日志</Run>
+                                        <LineBreak/>
+                                        <Run>修复暗黑主题下设置页显示bug</Run>
+                                        <LineBreak/>
+                                        <LineBreak/>
+                                        
                                         <Run>版本v1.0.13更新日志</Run>
                                         <LineBreak/>
-                                        <Run>1、修复历史页显示bug</Run>
+                                        <Run>修复历史页显示bug</Run>
                                         <LineBreak/>
                                         <LineBreak/>
                                         
@@ -212,21 +218,21 @@
                                         <Run></Run>
                                         <Run>版本v1.0.10更新日志</Run>
                                         <LineBreak/>
-                                        <Run>1、修复大量BUG</Run>
+                                        <Run>修复大量BUG</Run>
                                         <LineBreak/>
                                         
                                         <LineBreak/>
                                         <Run></Run>
                                         <Run>版本v1.0.10更新日志</Run>
                                         <LineBreak/>
-                                        <Run>1、加入视频观看历史</Run>
+                                        <Run>加入视频观看历史</Run>
                                         <LineBreak/>
                                         
                                         <LineBreak/>
                                         <Run></Run>
                                         <Run>版本v1.0.9更新日志</Run>
                                         <LineBreak/>
-                                        <Run>1、重构增强规则引擎</Run>
+                                        <Run>重构增强规则引擎</Run>
                                         <LineBreak/>
                                         
                                     </TextBlock>
@@ -238,7 +244,7 @@
             </Grid>
         </DataTemplate>
     </Page.Resources>
-    <Grid Background="White">
+    <Grid>
         <ContentPresenter
             x:Name="SettingsPresenter"
             ContentTemplate="{StaticResource SettingsTemplate}"
