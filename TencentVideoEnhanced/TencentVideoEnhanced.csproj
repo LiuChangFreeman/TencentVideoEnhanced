@@ -128,7 +128,7 @@
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
     <Compile Include="Model\Activity.cs" />
-    <Compile Include="Model\exception.cs" />
+    <Compile Include="Model\Exception.cs" />
     <Compile Include="Model\Utils.cs" />
     <Compile Include="View\History.xaml.cs">
       <DependentUpon>History.xaml</DependentUpon>

@@ -4,37 +4,6 @@ using Windows.UI.Xaml.Controls;
 
 namespace TencentVideoEnhanced.Model
 {
-    /// <summary>
-    /// Wrapper around a standard synchronization context, that catches any unhandled exceptions.
-    /// Acts as a facade passing calls to the original SynchronizationContext
-    /// </summary>
-    /// <example>
-    /// Set this up inside your App.xaml.cs file as follows:
-    /// <code>
-    /// protected override void OnActivated(IActivatedEventArgs args)
-    /// {
-    ///     EnsureSyncContext();
-    ///     ...
-    /// }
-    /// 
-    /// protected override void OnLaunched(LaunchActivatedEventArgs args)
-    /// {
-    ///     EnsureSyncContext();
-    ///     ...
-    /// }
-    /// 
-    /// private void EnsureSyncContext()
-    /// {
-    ///     var exceptionHandlingSynchronizationContext = ExceptionHandlingSynchronizationContext.Register();
-    ///     exceptionHandlingSynchronizationContext.UnhandledException += OnSynchronizationContextUnhandledException;
-    /// }
-    /// 
-    /// private void OnSynchronizationContextUnhandledException(object sender, UnhandledExceptionEventArgs args)
-    /// {
-    ///     args.Handled = true;
-    /// }
-    /// </code>
-    /// </example>
     public class ExceptionHandlingSynchronizationContext : SynchronizationContext
     {
         /// <summary>

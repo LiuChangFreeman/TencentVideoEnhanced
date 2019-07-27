@@ -11,13 +11,13 @@
     NavigationCacheMode="Disabled"
     >
     <Page.Resources>
+        
         <data:ToggleSwitchVisibilityConverter x:Key="ToggleSwitchVisibilityConverter"/>
         <data:ToggleButtonVisibilityConverter x:Key="ToggleButtonVisibilityConverter"/>
         <data:SliderVisibilityConverter x:Key="SliderVisibilityConverter"/>
         <data:ToggleButtonContentConverter x:Key="ToggleButtonContentConverter"/>
         <data:SliderValueConverter x:Key="SliderValueConverter"/>
         <data:SliderHeaderTextConverter x:Key="SliderHeaderTextConverter"/>
-
 
         <DataTemplate x:Key="SettingsTemplate" x:DataType="data:Rules">
             <Grid>
@@ -45,7 +45,7 @@
                                                         IsEnabled="{x:Bind enable}"
                                                         Toggled="ToggleSwitch_Toggled"
                                                     >
-                                                    
+
                                                     </ToggleSwitch>
                                                     <StackPanel
                                                     Visibility="{x:Bind id,Converter={StaticResource ToggleButtonVisibilityConverter}}"
@@ -104,18 +104,18 @@
                                         ItemsSource="{x:Bind rules.compact.video,Mode=TwoWay}"
                                         ScrollViewer.VerticalScrollBarVisibility="Hidden" 
                                     >
-                                        <ListView.ItemTemplate>
-                                            <DataTemplate x:DataType="data:RulesItem" >
-                                                <ToggleSwitch 
+                                    <ListView.ItemTemplate>
+                                        <DataTemplate x:DataType="data:RulesItem" >
+                                            <ToggleSwitch 
                                                     Header="{x:Bind description}"
                                                     IsOn="{x:Bind status,Mode=TwoWay}"
                                                     IsEnabled="{x:Bind enable}"
                                                     Toggled="ToggleSwitch_Toggled"
                                                 >
-                                                </ToggleSwitch>
-                                            </DataTemplate>
-                                        </ListView.ItemTemplate>
-                                    </ListView>
+                                            </ToggleSwitch>
+                                        </DataTemplate>
+                                    </ListView.ItemTemplate>
+                                </ListView>
                             </ScrollViewer.Content>
                         </ScrollViewer>
                     </PivotItem>
@@ -172,28 +172,39 @@
                             <ScrollViewer.Content>
                                 <StackPanel>
                                     <StackPanel Orientation="Horizontal">
-                                <TextBlock FontSize="20" Margin="30,10,0,0" HorizontalAlignment="Left" VerticalAlignment="Center">当前增强规则版本: v</TextBlock>
-                                <TextBlock FontSize="20" Margin="0,10,0,0" HorizontalAlignment="Left" VerticalAlignment="Center" Text="{x:Bind version}"></TextBlock>
-                            </StackPanel>
+                                        <TextBlock FontSize="20" Margin="30,10,0,0" HorizontalAlignment="Left" VerticalAlignment="Center">当前增强规则版本: v</TextBlock>
+                                        <TextBlock FontSize="20" Margin="0,10,0,0" HorizontalAlignment="Left" VerticalAlignment="Center" Text="{x:Bind version}"></TextBlock>
+                                    </StackPanel>
                                     <Button x:Name="UpdateSettings" Margin="30,10,10,10" Content="更新规则" Click="UpdateSettings_Click" ></Button>
-                            <TextBlock FontSize="20" Margin="30,10,0,2" HorizontalAlignment="Left" VerticalAlignment="Center" FontWeight="Bold">
+                                    <TextBlock FontSize="20" Margin="30,10,0,2" HorizontalAlignment="Left" VerticalAlignment="Center" FontWeight="Bold">
                                 本应用为腾讯视频第三方版本v1.0.14，基于官方H5网页版
-                            </TextBlock>
+                                    </TextBlock>
                                     <StackPanel Orientation="Horizontal">
-                                <TextBlock FontSize="16" Margin="30,2,0,2" HorizontalAlignment="Left" VerticalAlignment="Center">
+                                        <TextBlock FontSize="16" Margin="30,2,0,2" HorizontalAlignment="Left" VerticalAlignment="Center">
                                     源代码请参阅:
-                                </TextBlock>
-                                <HyperlinkButton 
+                                        </TextBlock>
+                                        <HyperlinkButton 
                                     HorizontalAlignment="Center"
                                     FontSize="16" Margin="5,2,0,2"
                                 Content="GitHub项目地址" NavigateUri="https://github.com/LiuChangFreeman/TencentVideoEnhanced"
                                 />
-                            </StackPanel>
+                                    </StackPanel>
                                     <TextBlock FontSize="16" Margin="30,2,0,2" HorizontalAlignment="Left" VerticalAlignment="Center">
                                 如有任何需求或者建议请在GitHub上提出
                                     </TextBlock>
                                     <TextBlock FontSize="12" Margin="30,5,0,2" HorizontalAlignment="Left" VerticalAlignment="Center" TextAlignment="Justify">
                                         <Run ></Run>
+                                        
+                                        <Run>版本v1.0.15更新日志</Run>
+                                        <LineBreak/>
+                                        <Run>1、加入捐助开发者渠道</Run>
+                                        <LineBreak/>
+                                        <Run>2、提供了更丰富的搜索页选项</Run>
+                                        <LineBreak/>
+                                        <Run>3、细节功能优化</Run>
+                                        <LineBreak/>
+                                        <LineBreak/>
+                                        
                                         <Run>版本v1.0.14更新日志</Run>
                                         <LineBreak/>
                                         <Run>修复暗黑主题下设置页显示bug</Run>
@@ -234,16 +245,27 @@
                                         <LineBreak/>
                                         <Run>重构增强规则引擎</Run>
                                         <LineBreak/>
-                                        
+
                                     </TextBlock>
                                 </StackPanel>
                             </ScrollViewer.Content>
                         </ScrollViewer>
                     </PivotItem>
+                    <PivotItem Header="捐助开发者">
+                        <Grid>
+                            <TextBlock FontWeight="Bold" TextAlignment="Center" FontSize="36" Foreground="#FF46A7D4" Margin="0,48,0,0">
+                            助力开发者走得更远
+                            </TextBlock>
+                            <Image  Source="http://static.aikatsucn.cn/images/tencent-video-enhanced/wx.jpg" Width="240" HorizontalAlignment="Left" Margin="120,0,0,0"/>
+                            <Image Source="http://static.aikatsucn.cn/images/tencent-video-enhanced/zfb.jpg" Width="240" HorizontalAlignment="Right" Margin="0,0,120,0"/>
+                        </Grid>
+
+                    </PivotItem>
                 </Pivot>
             </Grid>
         </DataTemplate>
     </Page.Resources>
+    
     <Grid>
         <ContentPresenter
             x:Name="SettingsPresenter"
@@ -257,4 +279,5 @@
             x:Name="Loading"  Width="80" Height="80"
         />
     </Grid>
+    
 </Page>

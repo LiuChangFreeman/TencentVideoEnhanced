@@ -1,5 +1,5 @@
 ﻿{
-  "version": 3,
+  "version": 4,
   "rules": {
     "eval": [
       {
@@ -413,6 +413,13 @@
       "value": "历史页",
       "description": "默认主页",
       "status": true,
+      "enable": true
+    },
+    {
+      "id": "X007",
+      "value": "",
+      "description": "内容更丰富的搜索页",
+      "status": false,
       "enable": true
     },
     {

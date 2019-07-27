@@ -1,27 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
 using Windows.UI.ViewManagement;
-using Windows.Storage;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
-using Newtonsoft.Json;
 using TencentVideoEnhanced.Model;
 using System.Threading.Tasks;
-using Microsoft.Toolkit.Uwp.Helpers;
 using Windows.Foundation.Metadata;
 using Windows.UI;
 using Windows.UI.Core;
-using Windows.ApplicationModel.Core;
 using System.Threading;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
@@ -136,7 +123,7 @@ namespace TencentVideoEnhanced.View
             Information.Text = "正在加载内容......";
         }
 
-        private async void NavigationCompleted(WebView sender, WebViewNavigationCompletedEventArgs args)
+        private void NavigationCompleted(WebView sender, WebViewNavigationCompletedEventArgs args)
         {
             foreach (RulesItem item in App.Rules.rules.eval)
             {
@@ -152,11 +139,11 @@ namespace TencentVideoEnhanced.View
                     RemoveElementsByClassName(item.value);
                 }
             }
-            await Task.Delay(1000);
             InitSuccess = true;
             Loading.IsActive = false;
             Blur.Visibility = Visibility.Collapsed;
             Information.Visibility = Visibility.Collapsed;
+            Go.Visibility = Visibility.Collapsed;
             RulesItem TimeLine = Utils.GetRulesItemById("X006");
             if (TimeLine.status)
             {
@@ -217,6 +204,7 @@ namespace TencentVideoEnhanced.View
         private void Refresh_Click(object sender, RoutedEventArgs e)
         {
             MainWebView.Refresh();
+            Go.Visibility = Visibility.Visible;
         }
 
         private async void FrameDOMContentLoaded(WebView sender, WebViewDOMContentLoadedEventArgs args)
@@ -266,10 +254,17 @@ namespace TencentVideoEnhanced.View
             {
                 Activity PrevousActivity =await GetActivity();
                 await Task.Delay(TimeDelay);
-                Activity NowActivity = await GetActivity();
-                if (NowActivity == PrevousActivity)
+                try
                 {
-                    Utils.AddToTimeLine(NowActivity);
+                    Activity NowActivity = await GetActivity();
+                    if (NowActivity == PrevousActivity)
+                    {
+                        Utils.AddToTimeLine(NowActivity);
+                    }
+                }
+                catch (Exception e)
+                {
+                    ;
                 }
             });
         }

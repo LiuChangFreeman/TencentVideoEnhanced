@@ -13,7 +13,7 @@ namespace TencentVideoEnhanced.Model
 {
     public class ToggleSwitchVisibilityConverter : IValueConverter
     {
-        private Collection<string> ShowAsToggleButton = new Collection<string>(){ "X001", "X003", "X004", "X005", "X006" };
+        private Collection<string> ShowAsToggleButton = new Collection<string>(){ "X001", "X003", "X004", "X005", "X006","X007" };
 
         public object Convert(object value, Type targetType, object parameter, string language)
         {
@@ -27,6 +27,7 @@ namespace TencentVideoEnhanced.Model
                 return Visibility.Collapsed;
             }
         }
+
         public object ConvertBack(object value, Type targetType, object parameter, string language)
         {
             throw new NotImplementedException();
@@ -49,6 +50,7 @@ namespace TencentVideoEnhanced.Model
                 return Visibility.Collapsed;
             }
         }
+
         public object ConvertBack(object value, Type targetType, object parameter, string language)
         {
             throw new NotImplementedException();
@@ -57,8 +59,6 @@ namespace TencentVideoEnhanced.Model
 
     public class ToggleButtonContentConverter : IValueConverter
     {
-        private Collection<string> ShowAsToggleButton = new Collection<string>() { "X002" };
-
         public object Convert(object value, Type targetType, object parameter, string language)
         {
             bool status = (bool)value;
@@ -71,6 +71,7 @@ namespace TencentVideoEnhanced.Model
                 return "搜索页";
             }
         }
+
         public object ConvertBack(object value, Type targetType, object parameter, string language)
         {
             throw new NotImplementedException();
@@ -93,6 +94,7 @@ namespace TencentVideoEnhanced.Model
                 return Visibility.Collapsed;
             }
         }
+
         public object ConvertBack(object value, Type targetType, object parameter, string language)
         {
             throw new NotImplementedException();
@@ -115,6 +117,7 @@ namespace TencentVideoEnhanced.Model
             }
             return result;
         }
+
         public object ConvertBack(object value, Type targetType, object parameter, string language)
         {
             return string.Format("{0}",value);
@@ -136,6 +139,7 @@ namespace TencentVideoEnhanced.Model
             }
 
         }
+
         public object ConvertBack(object value, Type targetType, object parameter, string language)
         {
             throw new NotImplementedException();

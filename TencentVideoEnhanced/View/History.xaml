@@ -22,5 +22,26 @@
             x:Name="Loading"  Width="80" Height="80"
         >
         </ProgressRing>
+        <Grid x:Name="TitleArea" Background="Transparent" Height="31" VerticalAlignment="Top" >
+        </Grid>
+
+        <Grid>
+            <StackPanel Orientation="Horizontal">
+                <Button 
+                    x:Name="Refresh" Content="&#xE72C;"
+                    FontFamily="Segoe MDL2 Assets" Background="Transparent" 
+                    Click="Refresh_Click" HorizontalAlignment="Left"   
+                    VerticalAlignment="Top" Height="31"
+                    Foreground="Black" Width="46"
+                    ToolTipService.ToolTip="刷新"
+                />
+                <Button x:Name="Go" Content="&#xE8B2;" 
+                FontFamily="Segoe MDL2 Assets" Background="Transparent" HorizontalAlignment="Left"   
+                VerticalAlignment="Top" Height="31"
+                Foreground="Black" Width="46"
+                ToolTipService.ToolTip="立刻进入" Click="Go_Click"
+                />
+            </StackPanel>
+        </Grid>
     </Grid>
 </Page>

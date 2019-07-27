@@ -1,24 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
-using Windows.Storage;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 using TencentVideoEnhanced.Model;
-using System.Threading.Tasks;
-using Microsoft.Toolkit.Uwp.Helpers;
-using Newtonsoft.Json;
-using System.Collections.ObjectModel;
-using Windows.UI.Popups;
 using Windows.UI.Core;
 using Windows.Foundation.Metadata;
 using Windows.UI;
@@ -61,6 +46,7 @@ namespace TencentVideoEnhanced.View
 
         private void Init()
         {
+            Window.Current.SetTitleBar(TitleArea);
             SystemNavigationManager.BackRequested += BackRequested;
             SystemNavigationManager.AppViewBackButtonVisibility = AppViewBackButtonVisibility.Visible;
             Loading.IsActive = true;
@@ -122,6 +108,7 @@ namespace TencentVideoEnhanced.View
 
             Loading.IsActive = false;
             Blur.Visibility = Visibility.Collapsed;
+            Go.Visibility = Visibility.Collapsed;
         }
 
         private async void AdaptWebViewWithWindow()
@@ -144,6 +131,20 @@ namespace TencentVideoEnhanced.View
         private void HistoryWebView_SizeChanged(object sender, SizeChangedEventArgs e)
         {
             AdaptWebViewWithWindow();
+        }
+
+        private void Refresh_Click(object sender, RoutedEventArgs e)
+        {
+            Loading.IsActive = true;
+            Blur.Visibility = Visibility.Visible;
+            Go.Visibility = Visibility.Visible;
+            HistoryWebView.Refresh();
+        }
+
+        private void Go_Click(object sender, RoutedEventArgs e)
+        {
+            Loading.IsActive = false;
+            Blur.Visibility = Visibility.Collapsed;
         }
     }
 }

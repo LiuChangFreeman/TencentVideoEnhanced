@@ -1,23 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
-using Windows.UI.ViewManagement;
-using Windows.Storage;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
-using Newtonsoft.Json;
 using TencentVideoEnhanced.Model;
-using System.Threading.Tasks;
-using Microsoft.Toolkit.Uwp.Helpers;
 using Windows.Foundation.Metadata;
 using Windows.UI;
 using Windows.UI.Core;
@@ -46,6 +32,14 @@ namespace TencentVideoEnhanced.View
             {
                 NavigationCacheMode = NavigationCacheMode.Required;
             }
+
+            RulesItem MoreInformation = Utils.GetRulesItemById("X007");
+            if (MoreInformation.status)
+            {
+                UriSearch = new Uri("https://v.qq.com/?ptag=qqbsc");
+            }
+
+            
             if (ApiInformation.IsApiContractPresent("Windows.Foundation.UniversalApiContract", 5))
             {
                 Blur.Background = new AcrylicBrush
@@ -105,6 +99,7 @@ namespace TencentVideoEnhanced.View
             }
             Loading.IsActive = false;
             Blur.Visibility = Visibility.Collapsed;
+            Go.Visibility = Visibility.Collapsed;
         }
 
         private async void RemoveElementsByClassName(string ClassName)
@@ -113,6 +108,20 @@ namespace TencentVideoEnhanced.View
             template = Utils.TransferTemplate(template);
             string script = string.Format(template, ClassName);
             await SearchWebView.InvokeScriptAsync("eval", new string[] { script });
+        }
+
+        private void Refresh_Click(object sender, RoutedEventArgs e)
+        {
+            Loading.IsActive = true;
+            Blur.Visibility = Visibility.Visible;
+            Go.Visibility = Visibility.Visible;
+            SearchWebView.Refresh();
+        }
+
+        private void Go_Click(object sender, RoutedEventArgs e)
+        {
+            Loading.IsActive = false;
+            Blur.Visibility = Visibility.Collapsed;
         }
     }
 }

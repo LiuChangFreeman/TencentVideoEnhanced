@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Package xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10" xmlns:mp="http://schemas.microsoft.com/appx/2014/phone/manifest" xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10" IgnorableNamespaces="uap mp">
-  <Identity Name="418144ECEFCB8.web" Publisher="CN=6CAF9BFA-D22E-4D62-B95C-0817613375A5" Version="1.0.14.0" />
+  <Identity Name="418144ECEFCB8.web" Publisher="CN=6CAF9BFA-D22E-4D62-B95C-0817613375A5" Version="1.0.15.0" />
   <mp:PhoneIdentity PhoneProductId="38c38351-a928-4f47-8cc9-89fd6eca5108" PhonePublisherId="00000000-0000-0000-0000-000000000000" />
   <Properties>
     <DisplayName>腾讯视频web增强版</DisplayName>

@@ -12,7 +12,7 @@ namespace TencentVideoEnhanced.Model
     class Utils
     {
         private static UserActivitySession CurrentSession;
-        public static Uri UpdateRulesUri = new Uri("http://aikatsucn.cn/files/rules.json");
+        public static Uri UpdateRulesUri = new Uri("http://static.aikatsucn.cn/static/tencent-video-enhanced/rules.json");
 
         public static string TransferTemplate(string format)
         {
