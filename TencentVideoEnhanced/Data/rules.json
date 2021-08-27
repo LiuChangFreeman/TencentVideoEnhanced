@@ -1,9 +1,9 @@
 ﻿{
-  "version": 4,
+  "version": 6,
   "rules": {
     "eval": [
       {
-        "id":"A001",
+        "id": "A001",
         "value": "var notvip=document.getElementsByClassName('icon_vip_grey').length>0;var content=document.getElementsByClassName('txp_popup_content');if(content.length>0){var children=content[0].childNodes;for(var i=0;i<children.length;i++){var child=children[i];var temp=$(child).attr('data-definition');if(temp=='pcclient'||(temp=='fhd'&&notvip)){content[0].removeChild(child);}}}",
         "description": "移除不可用分辨率",
         "status": true,
@@ -110,8 +110,13 @@
           "status": true,
           "enable": true
         },
-
-
+        {
+          "id": "B024",
+          "value": "mod_vip_sidebar",
+          "description": "开通VIP",
+          "status": true,
+          "enable": false
+        },
         {
           "id": "B010",
           "value": "txp_barrage_form",
@@ -447,7 +452,7 @@
       "id": "X006",
       "value": "1",
       "description": "在时间线中继续观看",
-      "status": true,
+      "status": false,
       "enable": true
     }
   ]

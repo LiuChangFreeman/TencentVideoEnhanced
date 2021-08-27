@@ -17,7 +17,7 @@ namespace TencentVideoEnhanced.View
     /// </summary>
     public sealed partial class Search : Page
     {
-        private Uri UriSearch = new Uri("https://v.qq.com/x/search");
+        private Uri UriSearch = new Uri("https://v.qq.com/x/search/");
         private SystemNavigationManager SystemNavigationManager = SystemNavigationManager.GetForCurrentView();
 
         public Search()

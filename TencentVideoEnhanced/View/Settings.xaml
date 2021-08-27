@@ -177,7 +177,7 @@
                                     </StackPanel>
                                     <Button x:Name="UpdateSettings" Margin="30,10,10,10" Content="更新规则" Click="UpdateSettings_Click" ></Button>
                                     <TextBlock FontSize="20" Margin="30,10,0,2" HorizontalAlignment="Left" VerticalAlignment="Center" FontWeight="Bold">
-                                本应用为腾讯视频第三方版本v1.0.14，基于官方H5网页版
+                                本应用为腾讯视频第三方版本，基于官方H5网页版
                                     </TextBlock>
                                     <StackPanel Orientation="Horizontal">
                                         <TextBlock FontSize="16" Margin="30,2,0,2" HorizontalAlignment="Left" VerticalAlignment="Center">
@@ -194,6 +194,13 @@
                                     </TextBlock>
                                     <TextBlock FontSize="12" Margin="30,5,0,2" HorizontalAlignment="Left" VerticalAlignment="Center" TextAlignment="Justify">
                                         <Run ></Run>
+                                        <Run>版本v1.0.16更新日志</Run>
+                                        <LineBreak/>
+                                        <Run>1、移除捐助开发者渠道</Run>
+                                        <LineBreak/>
+                                        <Run>2、修复bug</Run>
+                                        <LineBreak/>
+                                        <LineBreak/>
                                         
                                         <Run>版本v1.0.15更新日志</Run>
                                         <LineBreak/>
@@ -250,16 +257,6 @@
                                 </StackPanel>
                             </ScrollViewer.Content>
                         </ScrollViewer>
-                    </PivotItem>
-                    <PivotItem Header="捐助开发者">
-                        <Grid>
-                            <TextBlock FontWeight="Bold" TextAlignment="Center" FontSize="36" Foreground="#FF46A7D4" Margin="0,48,0,0">
-                            助力开发者走得更远
-                            </TextBlock>
-                            <Image  Source="http://static.aikatsucn.cn/images/tencent-video-enhanced/wx.jpg" Width="240" HorizontalAlignment="Left" Margin="120,0,0,0"/>
-                            <Image Source="http://static.aikatsucn.cn/images/tencent-video-enhanced/zfb.jpg" Width="240" HorizontalAlignment="Right" Margin="0,0,120,0"/>
-                        </Grid>
-
                     </PivotItem>
                 </Pivot>
             </Grid>

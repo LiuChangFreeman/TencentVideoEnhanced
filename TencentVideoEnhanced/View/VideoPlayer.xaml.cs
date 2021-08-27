@@ -20,11 +20,10 @@ namespace TencentVideoEnhanced.View
     /// </summary>
     public sealed partial class VideoPlayer : Page
     {
-        private Uri UriSearch = new Uri("https://v.qq.com/x/search");
+        private Uri UriSearch = new Uri("https://v.qq.com/x/search/");
         private bool InitSuccess = false;
         private string CurrentUrl = "";
-        private string DefaultVideoUrl = "https://v.qq.com/x/cover/ocjepullqnzm7d9/x00262vbmzt.html";
-        //默认视频为《创造101》
+        private string DefaultVideoUrl = "https://v.qq.com/";
 
         public VideoPlayer()
         {
