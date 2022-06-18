@@ -11,7 +11,7 @@
     NavigationCacheMode="Disabled"
     >
     <Page.Resources>
-        
+
         <data:ToggleSwitchVisibilityConverter x:Key="ToggleSwitchVisibilityConverter"/>
         <data:ToggleButtonVisibilityConverter x:Key="ToggleButtonVisibilityConverter"/>
         <data:SliderVisibilityConverter x:Key="SliderVisibilityConverter"/>
@@ -58,15 +58,17 @@
                                                         >
                                                         </ToggleButton>
                                                     </StackPanel>
-                                                    <Slider 
-                                                        Header="{x:Bind value,Converter={StaticResource SliderHeaderTextConverter},Mode=OneWay}"
-                                                        Visibility="{x:Bind id,Converter={StaticResource SliderVisibilityConverter}}"
-                                                        IsEnabled="{x:Bind status,Mode=OneWay}"
-                                                        Maximum="10" Minimum="0"
-                                                        LargeChange="3" SmallChange="1"
-                                                        Value="{x:Bind value,Converter={StaticResource SliderValueConverter},Mode=TwoWay}" ValueChanged="Slider_ValueChanged"
-                                                    >
-                                                    </Slider>
+                                                    <StackPanel HorizontalAlignment="Left">
+                                                        <Slider 
+                                                            Header="{x:Bind value,Converter={StaticResource SliderHeaderTextConverter},Mode=OneWay}"
+                                                            Visibility="{x:Bind id,Converter={StaticResource SliderVisibilityConverter}}"
+                                                            IsEnabled="{x:Bind status,Mode=OneWay}"
+                                                            Maximum="10" Minimum="0"
+                                                            LargeChange="3" SmallChange="1"
+                                                            Width="300"
+                                                            Value="{x:Bind value,Converter={StaticResource SliderValueConverter},Mode=TwoWay}" ValueChanged="Slider_ValueChanged"
+                                                        />
+                                                    </StackPanel>
                                                 </StackPanel>
                                             </DataTemplate>
                                         </ListView.ItemTemplate>
@@ -193,8 +195,18 @@
                                 如有任何需求或者建议请在GitHub上提出
                                     </TextBlock>
                                     <TextBlock FontSize="12" Margin="30,5,0,2" HorizontalAlignment="Left" VerticalAlignment="Center" TextAlignment="Justify">
-                                        <Run ></Run>
-                                        <Run>版本v1.0.16更新日志</Run>
+                                        <Run>v1.0.18</Run>
+                                        <LineBreak/>
+                                        <Run>1、适配新版播放页面</Run>
+                                        <LineBreak/>
+                                        <LineBreak/>
+                                        <Run>v1.0.17</Run>
+                                        <LineBreak/>
+                                        <Run>1、更新使用WebView2作为底层</Run>
+                                        <LineBreak/>
+                                        <LineBreak/>
+                                        
+                                        <Run>v1.0.16</Run>
                                         <LineBreak/>
                                         <Run>1、移除捐助开发者渠道</Run>
                                         <LineBreak/>
@@ -202,7 +214,7 @@
                                         <LineBreak/>
                                         <LineBreak/>
                                         
-                                        <Run>版本v1.0.15更新日志</Run>
+                                        <Run>v1.0.15</Run>
                                         <LineBreak/>
                                         <Run>1、加入捐助开发者渠道</Run>
                                         <LineBreak/>
@@ -212,43 +224,39 @@
                                         <LineBreak/>
                                         <LineBreak/>
                                         
-                                        <Run>版本v1.0.14更新日志</Run>
+                                        <Run>v1.0.14</Run>
                                         <LineBreak/>
-                                        <Run>修复暗黑主题下设置页显示bug</Run>
-                                        <LineBreak/>
-                                        <LineBreak/>
-                                        
-                                        <Run>版本v1.0.13更新日志</Run>
-                                        <LineBreak/>
-                                        <Run>修复历史页显示bug</Run>
+                                        <Run>修复暗黑主题下设置页显示BUG</Run>
                                         <LineBreak/>
                                         <LineBreak/>
                                         
-                                        <Run ></Run>
-                                        <Run>版本v1.0.12更新日志</Run>
+                                        <Run>v1.0.13</Run>
+                                        <LineBreak/>
+                                        <Run>修复历史页显示BUG</Run>
+                                        <LineBreak/>
+                                        <LineBreak/>
+                                        
+                                        <Run>v1.0.12</Run>
                                         <LineBreak/>
                                         <Run>1、加入时间线</Run>
                                         <LineBreak/>
                                         <Run>2、修复广告详情不能弹出的BUG</Run>
                                         <LineBreak/>
-                                        
                                         <LineBreak/>
-                                        <Run></Run>
-                                        <Run>版本v1.0.10更新日志</Run>
+                                        
+                                        <Run>v1.0.10</Run>
                                         <LineBreak/>
                                         <Run>修复大量BUG</Run>
                                         <LineBreak/>
-                                        
                                         <LineBreak/>
-                                        <Run></Run>
-                                        <Run>版本v1.0.10更新日志</Run>
+                                        
+                                        <Run>v1.0.10</Run>
                                         <LineBreak/>
                                         <Run>加入视频观看历史</Run>
                                         <LineBreak/>
-                                        
                                         <LineBreak/>
-                                        <Run></Run>
-                                        <Run>版本v1.0.9更新日志</Run>
+
+                                        <Run>v1.0.9</Run>
                                         <LineBreak/>
                                         <Run>重构增强规则引擎</Run>
                                         <LineBreak/>
@@ -262,7 +270,7 @@
             </Grid>
         </DataTemplate>
     </Page.Resources>
-    
+
     <Grid>
         <ContentPresenter
             x:Name="SettingsPresenter"
@@ -276,5 +284,5 @@
             x:Name="Loading"  Width="80" Height="80"
         />
     </Grid>
-    
+
 </Page>

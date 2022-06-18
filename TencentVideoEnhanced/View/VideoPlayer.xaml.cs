@@ -10,6 +10,8 @@ using Windows.Foundation.Metadata;
 using Windows.UI;
 using Windows.UI.Core;
 using System.Threading;
+using Microsoft.Web.WebView2.Core;
+using Windows.Storage;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
 
@@ -20,14 +22,16 @@ namespace TencentVideoEnhanced.View
     /// </summary>
     public sealed partial class VideoPlayer : Page
     {
-        private Uri UriSearch = new Uri("https://v.qq.com/x/search/");
         private bool InitSuccess = false;
         private string CurrentUrl = "";
         private string DefaultVideoUrl = "https://v.qq.com/";
+        private CoreWebView2 coreWebView;
+        private ContentDialog dialog;
 
         public VideoPlayer()
         {
             this.InitializeComponent();
+            Init();
             if (ApiInformation.IsApiContractPresent("Windows.Foundation.UniversalApiContract", 5))
             {
                 Blur.Background = new AcrylicBrush
@@ -36,20 +40,33 @@ namespace TencentVideoEnhanced.View
                     TintColor = Colors.Transparent,
                     TintOpacity = 0.5
                 };
-            }
-            Init();
+            } 
         }
 
-        private void Init()
+        private async void Init()
         {
             SystemNavigationManager SystemNavigationManager = SystemNavigationManager.GetForCurrentView();
             SystemNavigationManager.BackRequested += BackRequested;
             SystemNavigationManager.AppViewBackButtonVisibility = AppViewBackButtonVisibility.Visible;
             Window.Current.SetTitleBar(TitleArea);
+            await MainWebView.EnsureCoreWebView2Async();
+            coreWebView = MainWebView.CoreWebView2;
+            coreWebView.DOMContentLoaded += DOMContentLoaded;
+            coreWebView.ContainsFullScreenElementChanged += ContainsFullScreenElementChanged;
+            coreWebView.NewWindowRequested += NewWindowRequested;
+            coreWebView.NavigationCompleted += NavigationCompleted;
+            coreWebView.NavigationStarting += NavigationStarting;
+            ApplicationDataContainer localSettings = ApplicationData.Current.LocalSettings;
+            string showTeachingTipRefresh = localSettings.Values["ShowTeachingTipRefresh"] as string;
+            if (showTeachingTipRefresh != "false")
+            {
+                TeachingTip.IsOpen = true;
+            }
         }
 
-        protected override void OnNavigatedTo(NavigationEventArgs e)
+        protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
+            await MainWebView.EnsureCoreWebView2Async();
             string Url= e.Parameter as string;
             if (CurrentUrl != ""&& Url == "resume from main page")
             {
@@ -62,7 +79,7 @@ namespace TencentVideoEnhanced.View
                     Url = DefaultVideoUrl;
                 }
                 //当新的视频需要加载时
-                MainWebView.Navigate(new Uri(Url));
+                coreWebView.Navigate(Url);
                 CurrentUrl = Url;
             }
         }
@@ -82,34 +99,26 @@ namespace TencentVideoEnhanced.View
             //窗口改变大小时，重新调整元素的宽高
             string template = "var width=document.body.clientWidth;var elements = document.getElementsByClassName('{{0}}');if (elements.length > 0){elements[0].style.width=width+'px';}";
             template = Utils.TransferTemplate(template);
-            var script = string.Format(template, "container_inner");
-            await MainWebView.InvokeScriptAsync("eval", new string[] { script });
+            var script = string.Format(template, "container-main");
+            await coreWebView.ExecuteScriptAsync(script);
             template = "var elements = document.getElementsByClassName('{{0}}');if (elements.length > 0){elements[0].style.height='100%';}";
             template = Utils.TransferTemplate(template);
-            script = string.Format(template, "mod_player");
-            await MainWebView.InvokeScriptAsync("eval", new string[] { script });
+            script = string.Format(template, "container-main");
+            await coreWebView.ExecuteScriptAsync(script);
             template = "var width=document.body.clientWidth;var elements = document.getElementsByClassName('{{0}}');if (elements.length > 0){elements[0].style.width=width-320+'px';}";
             template = Utils.TransferTemplate(template);
-            script = string.Format(template, "mod_player_section");
-            await MainWebView.InvokeScriptAsync("eval", new string[] { script });
+            script = string.Format(template, "container-main__left");
+            await coreWebView.ExecuteScriptAsync(script);
             var height = MainWebView.ActualHeight;
             template = "var elements = document.getElementsByClassName('{{0}}');if (elements.length > 0){elements[0].style.height='{{1}}px';}";
             template = Utils.TransferTemplate(template);
-            script = string.Format(template, "mod_player_section", height);
-            await MainWebView.InvokeScriptAsync("eval", new string[] { script });
-            script = string.Format(template, "scroll_wrap", height);
-            await MainWebView.InvokeScriptAsync("eval", new string[] { script });
+            script = string.Format(template, "player__wrapper", height);
+            await coreWebView.ExecuteScriptAsync(script);
+            script = string.Format(template, "container-main", height);
+            await coreWebView.ExecuteScriptAsync(script);
         }
 
-        private void NavigationStarting(WebView sender, WebViewNavigationStartingEventArgs args)
-        {
-            Loading.IsActive = true;
-            Blur.Visibility = Visibility.Visible;
-            Information.Visibility = Visibility.Visible;
-            Information.Text = "等待网页响应......";
-        }
-
-        private void DOMContentLoaded(WebView sender, WebViewDOMContentLoadedEventArgs args)
+        private void DOMContentLoaded(CoreWebView2 sender, CoreWebView2DOMContentLoadedEventArgs args)
         {
             foreach (RulesItem item in App.Rules.rules.compact.video)
             {
@@ -119,30 +128,87 @@ namespace TencentVideoEnhanced.View
                 }
             }
             AdaptWebViewWithWindow();
-            Information.Text = "正在加载内容......";
         }
 
-        private void NavigationCompleted(WebView sender, WebViewNavigationCompletedEventArgs args)
+
+        private void injectWebview()
         {
             foreach (RulesItem item in App.Rules.rules.eval)
             {
                 if (item.status)
                 {
-                    EvalScripts(item.value);
+                    try
+                    {
+                        EvalScripts(item.value);
+                    }
+                    catch (Exception)
+                    {
+                        ;
+                    }
                 }
             }
             foreach (RulesItem item in App.Rules.rules.compact.video)
             {
                 if (item.status)
                 {
-                    RemoveElementsByClassName(item.value);
+                    try
+                    {
+                        RemoveElementsByClassName(item.value);
+                    }
+                    catch (Exception)
+                    {
+                        ;
+                    }
                 }
             }
+        }
+
+
+        private async void NavigationStarting(CoreWebView2 sender, CoreWebView2NavigationStartingEventArgs args)
+        {
+            Loading.IsActive = true;
+            Blur.Visibility = Visibility.Visible;
+            if (dialog == null)
+            { 
+                dialog = new ContentDialog();
+                dialog.Title = "等待加载中...";
+                dialog.PrimaryButtonText = "跳过";
+                dialog.SecondaryButtonText = "刷新";
+                dialog.Content = "如果加载时间过长，您可以选择跳过等待或者刷新";
+                dialog.DefaultButton = ContentDialogButton.Primary;
+                var result = await dialog.ShowAsync();
+                if (result == ContentDialogResult.Primary)
+                {
+                    dialog = null;
+                    Loading.IsActive = false;
+                    Blur.Visibility = Visibility.Collapsed;
+                }
+                else if (result == ContentDialogResult.Secondary)
+                {
+                    dialog = null;
+                    coreWebView.Reload();
+                }
+            }
+        }
+
+        private void NavigationCompleted(CoreWebView2 sender, CoreWebView2NavigationCompletedEventArgs args)
+        {
+            injectWebview();
             InitSuccess = true;
             Loading.IsActive = false;
             Blur.Visibility = Visibility.Collapsed;
-            Information.Visibility = Visibility.Collapsed;
-            Go.Visibility = Visibility.Collapsed;
+            try
+            {
+                if (dialog != null)
+                {
+                    dialog.Hide();
+                    dialog = null;
+                }
+            }
+            catch (Exception)
+            {
+                ;
+            }
             RulesItem TimeLine = Utils.GetRulesItemById("X006");
             if (TimeLine.status)
             {
@@ -153,7 +219,7 @@ namespace TencentVideoEnhanced.View
 
         private async void EvalScripts(string script)
         {
-            await MainWebView.InvokeScriptAsync("eval", new string[] { script });
+            await coreWebView.ExecuteScriptAsync(script);
         }
 
         private void RemoveElementsByClassName(string ClassName)
@@ -164,30 +230,29 @@ namespace TencentVideoEnhanced.View
             EvalScripts(script);
         }
 
-        private void ContainsFullScreenElementChanged(WebView sender, object args)
+        private void ContainsFullScreenElementChanged(CoreWebView2 sender, object args)
         {
             var applicationView = ApplicationView.GetForCurrentView();
             if (sender.ContainsFullScreenElement)
             {
                 applicationView.TryEnterFullScreenMode();
-                Go.Visibility = Visibility.Collapsed;
                 Refresh.Visibility = Visibility.Collapsed;
             }
             else if (applicationView.IsFullScreenMode)
             {
                 applicationView.ExitFullScreenMode();
-                Go.Visibility = Visibility.Visible;
                 Refresh.Visibility = Visibility.Visible;
             }
         }
 
-        private void NewWindowRequested(WebView sender, WebViewNewWindowRequestedEventArgs args)
+        private async void NewWindowRequested(CoreWebView2 sender, CoreWebView2NewWindowRequestedEventArgs args)
         {
+            await MainWebView.EnsureCoreWebView2Async();
             string Url = args.Uri.ToString();
             if (Url.Contains("v.qq.com") &&(Url.Contains("cover") || Url.Contains("page")))
             {
                 args.Handled = true;
-                MainWebView.Navigate(args.Uri);
+                coreWebView.Navigate(Url);
             }
         }
 
@@ -200,32 +265,12 @@ namespace TencentVideoEnhanced.View
             AdaptWebViewWithWindow();
         }
 
-        private void Refresh_Click(object sender, RoutedEventArgs e)
+        private async void Refresh_Click(object sender, RoutedEventArgs e)
         {
-            MainWebView.Refresh();
-            Go.Visibility = Visibility.Visible;
+            await MainWebView.EnsureCoreWebView2Async();
+            coreWebView.Reload();
         }
 
-        private async void FrameDOMContentLoaded(WebView sender, WebViewDOMContentLoadedEventArgs args)
-        {
-            //移除开通VIP窗口，避免内购认证失败。弹出窗口中有一个iframe，很幸运可以方便地解决问题，否则就难办了
-            string script = "var vip=document.getElementsByClassName('tvip_bd');if(vip.length>0){vip[0].style.visibility=\"hidden\";}";
-            await MainWebView.InvokeScriptAsync("eval", new string[] { script });
-        }
-
-        private new void Loaded(object sender, RoutedEventArgs e)
-        {
-            Loading.IsActive = false;
-            Blur.Visibility = Visibility.Collapsed;
-            Information.Visibility = Visibility.Collapsed;
-        }
-
-        private void Go_Click(object sender, RoutedEventArgs e)
-        {
-            Loading.IsActive = false;
-            Blur.Visibility = Visibility.Collapsed;
-            Information.Visibility = Visibility.Collapsed;
-        }
 
         private async Task<Activity> GetActivity()
         {
@@ -233,15 +278,15 @@ namespace TencentVideoEnhanced.View
             string template = "var metas = document.getElementsByTagName('meta');for(var i=0;i<metas.length;i++){if(metas[i].getAttribute('itemprop')=='{{0}}'){metas[i].content;break;} }";
             template = Utils.TransferTemplate(template);
             var script = string.Format(template, "url");
-            Activity.url = await MainWebView.InvokeScriptAsync("eval", new string[] { script });
+            Activity.url = await coreWebView.ExecuteScriptAsync(script);
             script = string.Format(template, "image");
-            Activity.image = await MainWebView.InvokeScriptAsync("eval", new string[] { script });
+            Activity.image = await coreWebView.ExecuteScriptAsync(script);
             template = "var metas = document.getElementsByTagName('meta');for(var i=0;i<metas.length;i++){if(metas[i].name=='{{0}}'){metas[i].content;break;} }";
             template = Utils.TransferTemplate(template);
             script = string.Format(template, "title");
-            Activity.title = await MainWebView.InvokeScriptAsync("eval", new string[] { script });
+            Activity.title = await coreWebView.ExecuteScriptAsync(script);
             script = string.Format(template, "description");
-            Activity.description = await MainWebView.InvokeScriptAsync("eval", new string[] { script });
+            Activity.description = await coreWebView.ExecuteScriptAsync(script);
             return Activity;
         }
 
@@ -261,11 +306,17 @@ namespace TencentVideoEnhanced.View
                         Utils.AddToTimeLine(NowActivity);
                     }
                 }
-                catch (Exception e)
+                catch (Exception)
                 {
                     ;
                 }
             });
+        }
+
+        private void TeachingTip_CloseButtonClick(Microsoft.UI.Xaml.Controls.TeachingTip sender, object args)
+        {
+            ApplicationDataContainer localSettings = ApplicationData.Current.LocalSettings;
+            localSettings.Values["ShowTeachingTipRefresh"] = "false";
         }
     }
 }

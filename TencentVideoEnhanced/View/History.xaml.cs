@@ -7,6 +7,7 @@ using TencentVideoEnhanced.Model;
 using Windows.UI.Core;
 using Windows.Foundation.Metadata;
 using Windows.UI;
+using Microsoft.Web.WebView2.Core;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
 
@@ -19,6 +20,8 @@ namespace TencentVideoEnhanced.View
     {
         private string Url = "http://v.qq.com/u/history";
         private SystemNavigationManager SystemNavigationManager = SystemNavigationManager.GetForCurrentView();
+        private CoreWebView2 coreWebView;
+        private ContentDialog dialog;
 
         public History()
         {
@@ -44,29 +47,35 @@ namespace TencentVideoEnhanced.View
             Init();
         }
 
-        private void Init()
+        private async void Init()
         {
             Window.Current.SetTitleBar(TitleArea);
             SystemNavigationManager.BackRequested += BackRequested;
             SystemNavigationManager.AppViewBackButtonVisibility = AppViewBackButtonVisibility.Visible;
+            await HistoryWebView.EnsureCoreWebView2Async();
+            coreWebView = HistoryWebView.CoreWebView2;
+            coreWebView.NewWindowRequested += NewWindowRequested;
+            coreWebView.NavigationCompleted += NavigationCompleted;
+            coreWebView.NavigationStarting += NavigationStarting;
             Loading.IsActive = true;
             Blur.Visibility = Visibility.Visible;
-            HistoryWebView.Navigate(new Uri(Url));
+            coreWebView.Navigate(Url);
         }
 
-        private void BackRequested(object sender, BackRequestedEventArgs e)
+        private async void BackRequested(object sender, BackRequestedEventArgs e)
         {
             //返回主页面
-            if (HistoryWebView.CanGoBack)
+            await HistoryWebView.EnsureCoreWebView2Async();
+            if (coreWebView.CanGoBack)
             {
                 Loading.IsActive = true;
                 Blur.Visibility = Visibility.Visible;
-                HistoryWebView.GoBack();
+                coreWebView.GoBack();
             }
             e.Handled = true;
         }
 
-        private void NewWindowRequested(WebView sender, WebViewNewWindowRequestedEventArgs args)
+        private async void NewWindowRequested(CoreWebView2 sender, CoreWebView2NewWindowRequestedEventArgs args)
         {
             string Url = args.Uri.ToString();
             args.Handled = true;
@@ -78,46 +87,96 @@ namespace TencentVideoEnhanced.View
             }
             else
             {
-                HistoryWebView.Navigate(args.Uri);
+                await HistoryWebView.EnsureCoreWebView2Async();
+                coreWebView.Navigate(Url);
             }
         }
 
-        private async void NavigationCompleted(WebView sender, WebViewNavigationCompletedEventArgs args)
+        private async void NavigationStarting(CoreWebView2 sender, CoreWebView2NavigationStartingEventArgs args)
         {
+            Loading.IsActive = true;
+            Blur.Visibility = Visibility.Visible;
+            if (dialog==null)
+            {
+                dialog = new ContentDialog();
+                dialog.Title = "等待加载中...";
+                dialog.PrimaryButtonText = "跳过";
+                dialog.SecondaryButtonText = "刷新";
+                dialog.Content = "如果加载时间过长，您可以选择跳过等待或者刷新";
+                dialog.DefaultButton = ContentDialogButton.Primary;
+                var result = await dialog.ShowAsync();
+                if (result == ContentDialogResult.Primary)
+                {
+                    dialog = null;
+                    Loading.IsActive = false;
+                    Blur.Visibility = Visibility.Collapsed;
+                }
+                else if (result == ContentDialogResult.Secondary)
+                {
+                    dialog = null;
+                    coreWebView.Reload();
+                }
+            }
+        }
+
+        private async void NavigationCompleted(CoreWebView2 sender, CoreWebView2NavigationCompletedEventArgs args)
+        {
+
             foreach (RulesItem item in App.Rules.rules.compact.history)
             {
                 if (item.status)
                 {
-                    RemoveElementsByClassName(item.value);
+                    try
+                    {
+                        RemoveElementsByClassName(item.value);
+                    }
+                    catch (Exception)
+                    {
+                        ;
+                    }
+                    
                 }
             }
+
             var width = HistoryWebView.ActualHeight;
             string template = "var elements = document.getElementsByClassName('{{0}}');if (elements.length > 0){elements[0].style.width='{{1}}';elements[0].style.float='left';};document.body.style.overflowX='hidden';";
             template = Utils.TransferTemplate(template);
             string script = string.Format(template, "site_main", width);
-            await HistoryWebView.InvokeScriptAsync("eval", new string[] { script });
+            await coreWebView.ExecuteScriptAsync(script);
 
             template = "var elements = document.getElementsByClassName('{{0}}');if (elements.length > 0){elements[0].style.position='relative';elements[0].style.left='100px';elements[0].style.margin='0px';}";
             template = Utils.TransferTemplate(template);
             script = string.Format(template, "mod_search");
-            await HistoryWebView.InvokeScriptAsync("eval", new string[] { script });
+            await coreWebView.ExecuteScriptAsync(script);
 
             //使所有链接都触发新窗口
             script = "var elements = document.getElementsByTagName('a');for(var i=0;i<elements.length;i++){elements[i].target='_blank';}";
-            await HistoryWebView.InvokeScriptAsync("eval", new string[] { script });
+            await coreWebView.ExecuteScriptAsync(script);
 
             Loading.IsActive = false;
             Blur.Visibility = Visibility.Collapsed;
-            Go.Visibility = Visibility.Collapsed;
+            try
+            {
+                if (dialog != null)
+                {
+                    dialog.Hide();
+                    dialog=null;
+                }
+            }
+            catch (Exception)
+            {
+                ;
+            }
         }
 
         private async void AdaptWebViewWithWindow()
         {
+            await HistoryWebView.EnsureCoreWebView2Async();
             var width = HistoryWebView.ActualHeight;
             string template = "var elements = document.getElementsByClassName('{{0}}');if (elements.length > 0){elements[0].style.width='{{1}}px';}";
             template = Utils.TransferTemplate(template);
             string script = string.Format(template, "wrapper_main", width);
-            await HistoryWebView.InvokeScriptAsync("eval", new string[] { script });
+            await coreWebView.ExecuteScriptAsync(script);
         }
 
         private async void RemoveElementsByClassName(string ClassName)
@@ -125,7 +184,7 @@ namespace TencentVideoEnhanced.View
             string template = "while(true){var elements = document.getElementsByClassName('{{0}}');if(elements.length>0){for(var i=0;i<elements.length;i++){elements[i].parentNode.removeChild(elements[i]);} }else{break;} }";
             template = Utils.TransferTemplate(template);
             string script = string.Format(template, ClassName);
-            await HistoryWebView.InvokeScriptAsync("eval", new string[] { script });
+            await coreWebView.ExecuteScriptAsync(script);
         }
 
         private void HistoryWebView_SizeChanged(object sender, SizeChangedEventArgs e)
@@ -133,12 +192,10 @@ namespace TencentVideoEnhanced.View
             AdaptWebViewWithWindow();
         }
 
-        private void Refresh_Click(object sender, RoutedEventArgs e)
+        private async void Refresh_Click(object sender, RoutedEventArgs e)
         {
-            Loading.IsActive = true;
-            Blur.Visibility = Visibility.Visible;
-            Go.Visibility = Visibility.Visible;
-            HistoryWebView.Refresh();
+            await HistoryWebView.EnsureCoreWebView2Async();
+            coreWebView.Reload();
         }
 
         private void Go_Click(object sender, RoutedEventArgs e)

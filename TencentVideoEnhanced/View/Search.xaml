@@ -6,39 +6,21 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
+    xmlns:control="using:Microsoft.UI.Xaml.Controls"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
     >
     <Grid>
-        
-        <WebView x:Name="SearchWebView" 
-                NewWindowRequested="NewWindowRequested" 
-                NavigationCompleted="NavigationCompleted"         
-        >
-        </WebView>
-        
-        <Grid x:Name="Blur">
-        </Grid>
-        
-        <ProgressRing
-            x:Name="Loading"  Width="80" Height="80"
-        >
-        </ProgressRing>
-
+        <control:WebView2 x:Name="SearchWebView" />
+        <Grid x:Name="Blur"/>
+        <ProgressRing x:Name="Loading"  Width="80" Height="80" Margin="0,0,0,-300"/>
         <Grid>
             <StackPanel Orientation="Horizontal">
                 <Button 
                     x:Name="Refresh" Content="&#xE72C;"
                     FontFamily="Segoe MDL2 Assets" Background="Transparent" 
                     Click="Refresh_Click" HorizontalAlignment="Left"   
-                    VerticalAlignment="Top" Height="31"
-                    Foreground="Black" Width="46"
+                    VerticalAlignment="Top" Height="31" Width="46"
                     ToolTipService.ToolTip="刷新"
-                />
-                <Button x:Name="Go" Content="&#xE8B2;" 
-                FontFamily="Segoe MDL2 Assets" Background="Transparent" HorizontalAlignment="Left"   
-                VerticalAlignment="Top" Height="31"
-                Foreground="Black" Width="46"
-                ToolTipService.ToolTip="立刻进入" Click="Go_Click"
                 />
             </StackPanel>
         </Grid>

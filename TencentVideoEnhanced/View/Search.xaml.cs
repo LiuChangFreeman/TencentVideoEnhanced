@@ -7,6 +7,7 @@ using TencentVideoEnhanced.Model;
 using Windows.Foundation.Metadata;
 using Windows.UI;
 using Windows.UI.Core;
+using Microsoft.Web.WebView2.Core;
 
 // https://go.microsoft.com/fwlink/?LinkId=234238 上介绍了“空白页”项模板
 
@@ -19,6 +20,8 @@ namespace TencentVideoEnhanced.View
     {
         private Uri UriSearch = new Uri("https://v.qq.com/x/search/");
         private SystemNavigationManager SystemNavigationManager = SystemNavigationManager.GetForCurrentView();
+        private CoreWebView2 coreWebView;
+        private ContentDialog dialog;
 
         public Search()
         {
@@ -52,43 +55,50 @@ namespace TencentVideoEnhanced.View
             Init();
         }
 
-        private void Init()
+        private async void Init()
         {
             SystemNavigationManager.BackRequested += BackRequested;
             SystemNavigationManager.AppViewBackButtonVisibility = AppViewBackButtonVisibility.Visible;
             Loading.IsActive = true;
             Blur.Visibility = Visibility.Visible;
-            SearchWebView.Navigate(UriSearch);
+            await SearchWebView.EnsureCoreWebView2Async();
+            coreWebView = SearchWebView.CoreWebView2;
+            coreWebView.NewWindowRequested += NewWindowRequested;
+            coreWebView.NavigationCompleted += NavigationCompleted;
+            coreWebView.NavigationStarting += NavigationStarting;
+            coreWebView.Navigate(UriSearch.ToString());
         }
 
 
-        private void BackRequested(object sender, BackRequestedEventArgs e)
+        private async void NavigationStarting(CoreWebView2 sender, CoreWebView2NavigationStartingEventArgs args)
         {
-            //返回主页面
-            if (SearchWebView.CanGoBack)
+            Loading.IsActive = true;
+            Blur.Visibility = Visibility.Visible;
+            if (dialog == null)
             {
-                SearchWebView.GoBack();
+                dialog = new ContentDialog();
+                dialog.Title = "等待加载中...";
+                dialog.PrimaryButtonText = "跳过";
+                dialog.SecondaryButtonText = "刷新";
+                dialog.Content = "如果加载时间过长，您可以选择跳过等待或者刷新";
+                dialog.DefaultButton = ContentDialogButton.Primary;
+                var result = await dialog.ShowAsync();
+                if (result == ContentDialogResult.Primary)
+                {
+                    dialog = null;
+                    Loading.IsActive = false;
+                    Blur.Visibility = Visibility.Collapsed;
+                }
+                else if (result == ContentDialogResult.Secondary)
+                {
+                    dialog = null;
+                    await SearchWebView.EnsureCoreWebView2Async();
+                    coreWebView.Reload();
+                }
             }
-            e.Handled = true;
         }
 
-        private void NewWindowRequested(WebView sender, WebViewNewWindowRequestedEventArgs args)
-        {
-            string Url=args.Uri.ToString();
-            args.Handled = true;
-            if (Url.Contains("v.qq.com") && (Url.Contains("cover") || Url.Contains("page")))
-            {
-                var CurrentFrame =Window.Current.Content as Frame;
-                var MainPage = CurrentFrame.Content as MainPage;
-                MainPage.MainFrame.Navigate(typeof(VideoPlayer), Url);
-            }
-            else
-            {
-                SearchWebView.Navigate(args.Uri);
-            }
-        }
-
-        private void NavigationCompleted(WebView sender, WebViewNavigationCompletedEventArgs args)
+        private void NavigationCompleted(CoreWebView2 sender, CoreWebView2NavigationCompletedEventArgs args)
         {
             foreach (RulesItem item in App.Rules.rules.compact.search)
             {
@@ -99,29 +109,61 @@ namespace TencentVideoEnhanced.View
             }
             Loading.IsActive = false;
             Blur.Visibility = Visibility.Collapsed;
-            Go.Visibility = Visibility.Collapsed;
+            try
+            {
+                if (dialog != null)
+                {
+                    dialog.Hide();
+                    dialog = null;
+                }
+            }
+            catch (Exception)
+            {
+                ;
+            }
+        }
+
+        private async void BackRequested(object sender, BackRequestedEventArgs e)
+        {
+            await SearchWebView.EnsureCoreWebView2Async();
+            //返回主页面
+            if (SearchWebView.CanGoBack)
+            {
+                SearchWebView.GoBack();
+            }
+            e.Handled = true;
+        }
+
+        private async void NewWindowRequested(CoreWebView2 sender, CoreWebView2NewWindowRequestedEventArgs args)
+        {
+            await SearchWebView.EnsureCoreWebView2Async();
+            string Url=args.Uri.ToString();
+            args.Handled = true;
+            if (Url.Contains("v.qq.com") && (Url.Contains("cover") || Url.Contains("page")))
+            {
+                var CurrentFrame =Window.Current.Content as Frame;
+                var MainPage = CurrentFrame.Content as MainPage;
+                MainPage.MainFrame.Navigate(typeof(VideoPlayer), Url);
+            }
+            else
+            {
+                coreWebView.Navigate(Url);
+            }
         }
 
         private async void RemoveElementsByClassName(string ClassName)
         {
+            await SearchWebView.EnsureCoreWebView2Async();
             string template = "while(true){var elements = document.getElementsByClassName('{{0}}');if(elements.length>0){for(var i=0;i<elements.length;i++){elements[i].parentNode.removeChild(elements[i]);} }else{break;} }";
             template = Utils.TransferTemplate(template);
             string script = string.Format(template, ClassName);
-            await SearchWebView.InvokeScriptAsync("eval", new string[] { script });
+            await coreWebView.ExecuteScriptAsync(script);
         }
 
-        private void Refresh_Click(object sender, RoutedEventArgs e)
+        private async void Refresh_Click(object sender, RoutedEventArgs e)
         {
-            Loading.IsActive = true;
-            Blur.Visibility = Visibility.Visible;
-            Go.Visibility = Visibility.Visible;
-            SearchWebView.Refresh();
-        }
-
-        private void Go_Click(object sender, RoutedEventArgs e)
-        {
-            Loading.IsActive = false;
-            Blur.Visibility = Visibility.Collapsed;
+            await SearchWebView.EnsureCoreWebView2Async();
+            coreWebView.Reload();
         }
     }
 }

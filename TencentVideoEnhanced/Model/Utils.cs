@@ -6,6 +6,8 @@ using Newtonsoft.Json;
 using Windows.ApplicationModel.UserActivities;
 using Windows.Storage;
 using Windows.UI.Shell;
+using Windows.UI.Xaml.Media;
+using Windows.UI.Xaml;
 
 namespace TencentVideoEnhanced.Model
 {

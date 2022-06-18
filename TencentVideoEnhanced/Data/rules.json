@@ -1,5 +1,5 @@
 ﻿{
-  "version": 6,
+  "version": 7,
   "rules": {
     "eval": [
       {
@@ -56,36 +56,15 @@
         },
         {
           "id": "B002",
-          "value": "txp_comment_hot",
-          "description": "热评按钮",
+          "value": "player-bottom",
+          "description": "工具栏",
           "status": true,
           "enable": true
         },
         {
           "id": "B003",
-          "value": "mod_intro",
+          "value": "player-bottom__intro",
           "description": "视频简介",
-          "status": true,
-          "enable": true
-        },
-        {
-          "id": "B004",
-          "value": "action_wrap",
-          "description": "播放次数",
-          "status": true,
-          "enable": true
-        },
-        {
-          "id": "B005",
-          "value": "btn_collect",
-          "description": "收藏按钮",
-          "status": true,
-          "enable": true
-        },
-        {
-          "id": "B006",
-          "value": "mod_title",
-          "description": "相关视频标题栏",
           "status": true,
           "enable": true
         },
@@ -94,13 +73,6 @@
           "value": "mod_figure",
           "description": "相关视频",
           "status": false,
-          "enable": true
-        },
-        {
-          "id": "B008",
-          "value": "container_main",
-          "description": "底部大片区域",
-          "status": true,
           "enable": true
         },
         {
@@ -118,13 +90,6 @@
           "enable": false
         },
         {
-          "id": "B010",
-          "value": "txp_barrage_form",
-          "description": "弹幕发送栏",
-          "status": false,
-          "enable": true
-        },
-        {
           "id": "B011",
           "value": "site_head_simple",
           "description": "顶部用户栏",
@@ -139,48 +104,6 @@
           "enable": true
         },
         {
-          "id": "B013",
-          "value": "mod_scene_change",
-          "description": "VIP宣传栏1",
-          "status": true,
-          "enable": false
-        },
-        {
-          "id": "B014",
-          "value": "mod_side_vip",
-          "description": "VIP宣传栏2",
-          "status": true,
-          "enable": false
-        },
-        {
-          "id": "B015",
-          "value": "txp_ad_skip_text",
-          "description": "VIP可关闭广告",
-          "status": true,
-          "enable": true
-        },
-        {
-          "id": "B016",
-          "value": "txp_btn_close",
-          "description": "关闭广告按钮",
-          "status": true,
-          "enable": true
-        },
-        {
-          "id": "B017",
-          "value": "txp_top_btns",
-          "description": "悬浮按钮",
-          "status": true,
-          "enable": true
-        },
-        {
-          "id": "B018",
-          "value": "quick_vip_meta",
-          "description": "开通VIP",
-          "status": true,
-          "enable": false
-        },
-        {
           "id": "B019",
           "value": "x_fixed_tool",
           "description": "辅助工具栏",
@@ -189,22 +112,15 @@
         },
         {
           "id": "B020",
-          "value": "mod_row_box",
+          "value": "container-bottom",
           "description": "评论区",
           "status": true,
           "enable": true
         },
         {
-          "id": "B021",
-          "value": "mod_ad",
-          "description": "广告位",
-          "status": true,
-          "enable": true
-        },
-        {
           "id": "B022",
-          "value": "player_container_wide_switch",
-          "description": "侧边栏按钮(已失效)",
+          "value": "player__wide-btn-shape",
+          "description": "宽屏播放按钮",
           "status": true,
           "enable": true
         },
@@ -415,7 +331,7 @@
     },
     {
       "id": "X002",
-      "value": "历史页",
+      "value": "搜索页",
       "description": "默认主页",
       "status": true,
       "enable": true
@@ -424,20 +340,20 @@
       "id": "X007",
       "value": "",
       "description": "内容更丰富的搜索页",
-      "status": false,
+      "status": true,
       "enable": true
     },
     {
       "id": "X003",
       "value": "",
-      "description": "搜索页不缓存",
+      "description": "搜索页不常驻",
       "status": false,
       "enable": true
     },
     {
       "id": "X004",
       "value": "",
-      "description": "历史页不缓存",
+      "description": "历史页不常驻",
       "status": false,
       "enable": true
     },
